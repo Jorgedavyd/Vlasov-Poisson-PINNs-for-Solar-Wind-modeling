@@ -1,0 +1,18 @@
+trainer:
+  logger: true
+  enable_checkpointing: true
+  max_epochs: 250
+  accelerator: cuda
+  devices:  1
+  precision: 32
+
+model:
+  class_path: model.Model
+  dict_kwargs:
+
+data:
+  class_path: data.DataModule
+  init_args:
+    batch_size: 32
+    num_workers: 8
+    pin_memory: true
