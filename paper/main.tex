@@ -1,0 +1,163 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{cite}
+
+\title{Vlasov PINNs for L1-Lagrange Solar Wind modeling}
+\author{Jorge D. Enciso}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+The solar wind phenomena is a vastly known event that arises from ionized solar outbursts into the stellar medium, commonly stimulating planets' magnetosphere. \cite{Gosling2007} The first record of a related event dates from 1859, popularly named "The Carrington event" after the English astronomer Richard Carrington (1826, 1875), who settled the intuition upon solar flares and geomagnetic fluctuations. Individuals from all around the glove sighted the Northern Lights, subtle variations in atmosphere's hues' tones, caused by ionized particles flowing through the ionosphere.
+
+Several attempts to model Solar Wind's dynamics can be empirically pinpointed : analytical methods \cite{}, numerical modelling \cite{2006LNCS.3732..554E, 10.3389/fspas.2023.1105797, windmodelling1}, and machine learning approaches \cite{comp_1, comp_2, comp_3}. All of them with different purposes.
+
+Traditional models and methodologies fail to account for the anysotropic nature of the Solar Wind. The Magnetohydrodynamics Model assumes a Boltzmann-Maxwellian distribution, doted with standard thermodynamical behavior. On the other hand, the Solar Wind is a collisionless plasma, precluding its inclusion solely within those boundaries. Thus, the present work emphasizes the usage of learnable neural operators engineered to analytically and empirically fit kinetic descriptions.
+
+Moreover, kinetic frames based on Maxwellian electromagnetism tend to be computationally expensive for the microscopic and macroscopic frame:
+
+\begin{equation}
+    n_{\alpha} (\mathbf{r}, t) := \int f_{\alpha}(\mathbf{r}, \mathbf{v}, t) d^3v
+\end{equation}
+
+\begin{equation}
+    \tau(r, t) := \sum q_{\alpha} n_{\alpha}
+\end{equation}
+
+\begin{equation}
+    \mathbf{u_{\alpha}} (\mathbf{r}, t) := \frac{1}{n_{\alpha}(\mathbf{r}, t)} \int v f_{\alpha}(\mathbf{r}, v, t) d^3v
+\end{equation}
+
+\begin{equation}
+    j(\mathbf{r}, t) := \sum q_{\alpha} n_{\alpha} \mathbf{u_{\alpha}}
+\end{equation}
+
+where $n_{\alpha}$ is the particle density, $u_{\alpha}$ the particle's drift velocity, $\tau(r, t)$ is the charge density, $j(r, t)$ is the current density, and $f_{\alpha}(r, v, t)$ is the Boltzmann's density function.
+
+Yet modern physics informed machine learning research schemes enable faster inference time and less computational load: embedding systems' equations within the loss function and constraining network's backbone based on empirical approaches.
+
+\section{Related Work}
+
+\subsection{Solar Wind modelling}
+
+\subsection{Physics informed Vlasov modeling}
+
+
+\section{Kinetic Models}
+In order to fully assume the magnetohydrodynamical model, interactions must converge to the Maxwell-Boltzmann thermodynamical distribution, implying a high colisionality degree, contrary to empirical observations of the Solar Wind. Therefore, the utilization of such a constrictive framework must be carefully evaluated before setting it up as a modeling constraints.
+
+Moreover, trying to answer quasy-isotropic behavior on near-earth L1-Lagrange point, different research papers assume the bi-Maxwellian temperature distributions, carrying out the Maxwell-Boltzmann thermodynamical distribution. Nevertheless, this assumption seems overly ideal. As a possible option, the inclusion of numerical distributions could bring insights into the interactions between plasma ionized particles.
+
+That's why, this work departs from the traditional approach, seeking the description of Solar Wind kinetic model without magnetohydrodynamical systems nor temperature distributions, fully describing these interactions with a physics informed data-driven structure as a substitution of empirical assumptions.
+
+\subsection{Boltzmann's equation}
+Within this frame, different kinetic statistical descriptors are suitable for the task as long as they make the correct assumptions. Therefore, the usage of Boltzmann's equation works perfectly within certain boundaries:
+
+\begin{equation}
+    \frac{\partial f}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}} f_\alpha + \mathbf{a} \cdot \nabla_{\mathbf{v}} f_\alpha= \left(\frac{\delta f}{\delta t}\right)_{col}
+\end{equation}
+
+This result is widely known for describing the Maxwell-Boltzmann distribution under defined conditions, so an alternative interpretation that accounts for colisionless plasma should be integrated:
+
+\subsection{Vlasov's equation}
+The Vlasov's equation is the colisionless variant of the Boltzmann's equation. Therefore, it is a  suitable kinetic model for the Solar Wind, accounting for key properties of it.
+
+\begin{equation}
+    \frac{\partial f_{\alpha}}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}}  f_{\alpha} + \frac{\mathbf{F}}{m} \cdot \nabla_{\mathbf{v}} f_\alpha = 0
+\end{equation}
+
+In this case, governed by electromagnetic interactions. Therefore, replacing the force $\mathbf{F}$ with the Lorentz Force:
+
+\begin{equation}
+    \frac{\partial f_{\alpha}}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}}  f_{\alpha} + \frac{q (\mathbf{E} + \mathbf{v} \times \mathbf{B})}{m} \cdot \nabla_{\mathbf{v}} f_\alpha = 0
+\end{equation}
+
+\section{Physics Informed Machine Learning}
+Usually, solely data-driven methods require huge volumes of high-quality data with black box algorithms that prevent interpretability, a key factor for physical modeling. The most recent research \cite{PINNS} advocate for physical informed virtual loss function terms, leading off to the vastly known field of Phyics Informed Neural Networks.
+
+This models where created as numerical methods for solving Partial Differential Equations that embed physical modeling. It further extended to all fields that required PDE solving as a computationally efficient numerical alternative to other solvers.
+
+
+\subsection{Approximating the density function with PINNs}
+The most recent research, using PINNs, develop a way to not just learn functions, but to learn functional operators: Lagrangian, Hamiltonian, etc. This research \cite{} creates a neural network that takes the general coordinates $q$ and $\dot q$ as input, to provide the lagrangian as an output, and leverage the auto-differentiation capabilities of modern machine learning frameworks to enforce the euler-lagrange equation:
+
+\begin{equation}
+    \frac{d}{dt} \frac{\partial \mathcal{L}}{\partial \dot q} - \frac{\partial \mathcal{L}}{\partial q} = 0
+\end{equation}
+
+As usage of $q$ and $\dot q$ as inputs is very convenient for the auto-differentiation engines, making it further computationally feasible.
+
+\section{Data}
+
+\subsection{DSCOVR: Deep Space Climate Observatory}
+DSCOVR, a joint mission between NASA and the National Oceanic and Atmospheric Administration, is a crucial observational platform for monitoring space weather \cite{nasa_dscovr}. Launched in 2015, DSCOVR's primary mission is to monitor and provide advanced warning of potentially hazardous space weather events such as solar flares and coronal mass ejections that could impact Earth.
+
+It is equipped with two key instruments for measuring both energetic particle incidence and magnetic field parameters: the Faraday cup and the magnetometer from the PlasMag instrument \cite{nasa_dscovr}. The readings from these two sensors are crucial for virtually analyzing plasma dynamics near the L1 Lagrange point. These readings will be used as part of the core model data due to their real-time availability.
+
+\subsection{ACE: Advanced Composition Explorer}
+ACE, launched in 1997, provides continuous measurements of the solar wind and interstellar particles. It is equipped with several instruments designed to study the composition of solar and galactic particles, which are crucial for understanding the space weather environment. ACE's data helps in predicting geomagnetic storms and contributes to our understanding of the heliosphere.
+
+\subsection{WIND}
+The WIND spacecraft, launched in 1994, is part of the Global Geospace Science initiative. It provides comprehensive measurements of the solar wind, magnetic fields, and energetic particles. WIND's data is essential for understanding the fundamental processes of the solar wind and its interaction with the Earth's magnetosphere.
+
+\section{Methods}
+
+\subsection{Neural Architecture Search (NAS)}
+As an intermediate step before training, a hyperparameter grid search algorithm based in Bayesian multi-objective optimization is employed to find the neural architecture. The Pareto front is plotted, selecting minimization of neural complexity and loss function.
+
+\subsection{Loss function}
+The neural network is trained using the standard gradient-descent based optimization algorithm: Adam. One Cycle learning optimizer is used to facilitate the learning rate plateau. Weight decay is implemented as a regularizer.
+
+The loss function consists on a virtual term, three integral boundary condition terms, and a l2 regularizer term:
+
+\begin{equation}
+    \mathcal{L}_{virtual}\left(\mathbf{E}, \mathbf{B}, \mathbf{v}, \mathbf{r}; \mathbf{\theta}\right) = \left(\frac{\partial f_{\alpha}}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}}  f_{\alpha} + \frac{q (\mathbf{E} + \mathbf{v} \times \mathbf{B})}{m} \cdot \nabla_{\mathbf{v}} f_\alpha \right)^2
+\end{equation}
+
+\begin{equation}
+    \mathcal{L}_{BC_1} \left(x; \mathbf{\theta}\right) = \left(\int_{x \sim X} f_\alpha (\mathbf{v}, \mathbf{r}, t) d^3\mathbf{v} d^3\mathbf{r} - 1\right)^2
+\end{equation}
+
+\begin{equation}
+    \mathcal{L}_{BC_2} \left(x; \mathbf{\theta}\right) = \left(\int_{x \sim X} f_\alpha (\mathbf{v}, \mathbf{r}, t) d^3\mathbf{v} - n_\alpha(\mathbf{r}, t) \right)^2
+\end{equation}
+
+\begin{equation}
+    \mathcal{L}_{BC_3} \left(x; \mathbf{\theta}\right) = \left(\sum_{\alpha} q_\alpha n_\alpha  \mathbf{u}_\alpha- j(\mathbf{r}, t) \right)^2
+\end{equation}
+
+\begin{equation}
+    \mathcal{L}_{regularizer} \left( \mathbf{\theta} \right) = \mathbb{E}_{w \in \mathbf{\theta}}\left[ w ^ 2 \right]
+\end{equation}
+
+Getting our final objective function:
+
+\begin{equation}
+    \mathcal{L}\left[\mathcal{L}_{virtual}, \mathcal{L}_{BC}, \mathcal{L}_{regularizer}\right] = \alpha_1 \mathcal{L}_{virtual} + \alpha_2 \sum_{i} \mathcal{L}_{BC_i} + \lambda \mathcal{L}_{regularizer}
+\end{equation}
+
+\section{Results}
+
+\section{Discussion}
+
+\section{Conclusion}
+This work demonstrated the effectiveness of Physics-Informed Neural Networks to model Solar Wind's behavior tied to diverse empirical and analytical formulations. By embedding the governing physical equations directly into the loss function, we can efficiently train a neural network to approximate the solution of this complex, non-linear system. Future work will focus on improving the kernel design and extending the approach to more sophisticated MHD scenarios, such as the interactions between Solar Wind and Sun's magnetosphere.
+
+\bibliographystyle{plain}
+
+\bibliography{references}
+\end{document}

@@ -1,0 +1,42 @@
+\begin{thebibliography}{1}
+
+\bibitem{comp_2}
+Yasser Abduallah, Jason~TL Wang, Prianka Bose, Genwei Zhang, Firas Gerges, and Haimin Wang.
+\newblock A deep learning approach to dst index prediction.
+\newblock {\em arXiv preprint arXiv:2205.02447}, 2022.
+
+\bibitem{2006LNCS.3732..554E}
+A.~{Ekenb{\"a}ck} and M.~{Holmstr{\"o}m}.
+\newblock {MHD modeling of the interaction between the solar wind and solar system objects}.
+\newblock 3732:554--562, 2006.
+
+\bibitem{Gosling2007}
+J.~T. Gosling.
+\newblock {\em The Solar Wind}.
+\newblock Elsevier, 2007.
+
+\bibitem{windmodelling1}
+Takuma Matsumoto.
+\newblock {Full compressible 3D MHD simulation of solar wind}.
+\newblock {\em Monthly Notices of the Royal Astronomical Society}, 500(4):4779--4787, 11 2020.
+
+\bibitem{nasa_dscovr}
+{National Aeronautics and Space Administration}.
+\newblock Dscovr mission overview, 2023.
+
+\bibitem{comp_3}
+AS~Parnowski.
+\newblock Regression modeling method of space weather prediction.
+\newblock {\em Astrophysics and Space Science}, 323(2):169--180, 2009.
+
+\bibitem{comp_1}
+Iris Yan.
+\newblock Early prediction of geomagnetic storms by machine learning algorithms.
+\newblock 2024.
+
+\bibitem{10.3389/fspas.2023.1105797}
+Man Zhang, Xueshang Feng, Huichao Li, Ming Xiong, Fang Shen, Liping Yang, Xinhua Zhao, Yufen Zhou, and Xiaojing Liu.
+\newblock Numerical modeling of solar wind and coronal mass ejection in the inner heliosphere: A review.
+\newblock {\em Frontiers in Astronomy and Space Sciences}, 10, 2023.
+
+\end{thebibliography}
