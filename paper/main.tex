@@ -6,7 +6,7 @@
 \usepackage{hyperref}
 \usepackage{cite}
 
-\title{Vlasov PINNs for L1-Lagrange Solar Wind modeling}
+\title{Determining Solar Wind's distribution with Vlasov PINNs}
 \author{Jorge D. Enciso}
 \date{\today}
 
@@ -15,6 +15,7 @@
 \maketitle
 
 \begin{abstract}
+    %TODO
 \end{abstract}
 
 \tableofcontents
@@ -24,7 +25,7 @@
 
 The solar wind phenomena is a vastly known event that arises from ionized solar outbursts into the stellar medium, commonly stimulating planets' magnetosphere. \cite{Gosling2007} The first record of a related event dates from 1859, popularly named "The Carrington event" after the English astronomer Richard Carrington (1826, 1875), who settled the intuition upon solar flares and geomagnetic fluctuations. Individuals from all around the glove sighted the Northern Lights, subtle variations in atmosphere's hues' tones, caused by ionized particles flowing through the ionosphere.
 
-Several attempts to model Solar Wind's dynamics can be empirically pinpointed : analytical methods \cite{}, numerical modelling \cite{2006LNCS.3732..554E, 10.3389/fspas.2023.1105797, windmodelling1}, and machine learning approaches \cite{comp_1, comp_2, comp_3}. All of them with different purposes.
+Several attempts to model Solar Wind's dynamics can be empirically pinpointed : analytical methods \cite{BLUME202396}, numerical modelling \cite{10.3389/fspas.2023.1105797, windmodelling1, Gombosi_2018}, and machine learning approaches \cite{comp_2, comp_3, guastavino2024forecastinggeoffectiveeventssolar, sabbatini2023solarwindspeedestimate, https://doi.org/10.1029/2023SW003561}. All of them with different purposes.
 
 Traditional models and methodologies fail to account for the anysotropic nature of the Solar Wind. The Magnetohydrodynamics Model assumes a Boltzmann-Maxwellian distribution, doted with standard thermodynamical behavior. On the other hand, the Solar Wind is a collisionless plasma, precluding its inclusion solely within those boundaries. Thus, the present work emphasizes the usage of learnable neural operators engineered to analytically and empirically fit kinetic descriptions.
 
@@ -52,17 +53,25 @@ Yet modern physics informed machine learning research schemes enable faster infe
 
 \section{Related Work}
 
-\subsection{Solar Wind modelling}
+\subsection{}
 
-\subsection{Physics informed Vlasov modeling}
+\subsection{Full compressible 3D MHD simulation of solar wind}
+On the matter of Solar Wind modeling, several numerical approaches are developed to understand near-Sun physics given certain boundary conditions. This research \cite{windmodelling1} creates a magnetohydrodynamical modeling scheme to understand these interactions under certain restrictions that approach heliospheric conditions. In this case, the current work is seeking more general descriptors of the Solar Wind, with real L1-Lagrange data as a cornerstone for the modeling scheme.
 
+\subsection{Physics informed Neural Networks applied to the description of wave-particle resonance in kinetic simulations of fusion plasmas}
+
+\cite{kumar2023physicsinformedneuralnetworks}
+
+\subsection{Physics-Informed Neural Networks for Solar Wind Prediction}
+
+\cite{johnson2022physics}
 
 \section{Kinetic Models}
-In order to fully assume the magnetohydrodynamical model, interactions must converge to the Maxwell-Boltzmann thermodynamical distribution, implying a high colisionality degree, contrary to empirical observations of the Solar Wind. Therefore, the utilization of such a constrictive framework must be carefully evaluated before setting it up as a modeling constraints.
+In order to fully assume the magnetohydrodynamical model, interactions must converge to the Maxwell-Boltzmann thermodynamical distribution for certain conditions, implying a high colisionality degree, contrary to empirical observations of the Solar Wind. Therefore, the utilization of such a constrictive framework must be carefully evaluated before setting it up as a modeling constraints.
 
-Moreover, trying to answer quasy-isotropic behavior on near-earth L1-Lagrange point, different research papers assume the bi-Maxwellian temperature distributions, carrying out the Maxwell-Boltzmann thermodynamical distribution. Nevertheless, this assumption seems overly ideal. As a possible option, the inclusion of numerical distributions could bring insights into the interactions between plasma ionized particles.
+Moreover, trying to answer quasy-isotropic behavior on near-earth L1-Lagrange point, different research papers assume the bi-Maxwellian or Kappa temperature distributions \cite{Stansby_2018, Nicolaou_2018, Zouganelis_2004}, carrying out the Maxwell-Boltzmann thermodynamical distribution. Nevertheless, this assumption seems overly ideal. As a possible option, the inclusion of numerical distributions could bring insights into the interactions between plasma ionized particles.
 
-That's why, this work departs from the traditional approach, seeking the description of Solar Wind kinetic model without magnetohydrodynamical systems nor temperature distributions, fully describing these interactions with a physics informed data-driven structure as a substitution of empirical assumptions.
+That's why, this work departs from that approach, seeking the description of Solar Wind kinetic model without magnetohydrodynamical systems nor temperature distributions, fully describing these interactions with a physics informed data-driven structure as a substitution of empirical assumptions.
 
 \subsection{Boltzmann's equation}
 Within this frame, different kinetic statistical descriptors are suitable for the task as long as they make the correct assumptions. Therefore, the usage of Boltzmann's equation works perfectly within certain boundaries:
@@ -86,20 +95,20 @@ In this case, governed by electromagnetic interactions. Therefore, replacing the
     \frac{\partial f_{\alpha}}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}}  f_{\alpha} + \frac{q (\mathbf{E} + \mathbf{v} \times \mathbf{B})}{m} \cdot \nabla_{\mathbf{v}} f_\alpha = 0
 \end{equation}
 
+This is a widely used model to account for anisotropies on Solar Wind \cite{Verscharen_2016} and as a chosen alternative to MHD models \cite{grandin2023hybridvlasovsimulationsoftxray}.
+
 \section{Physics Informed Machine Learning}
-Usually, solely data-driven methods require huge volumes of high-quality data with black box algorithms that prevent interpretability, a key factor for physical modeling. The most recent research \cite{PINNS} advocate for physical informed virtual loss function terms, leading off to the vastly known field of Phyics Informed Neural Networks.
+Usually, solely data-driven methods require huge volumes of high-quality data with black box algorithms that prevent interpretability, a key factor for physical modeling. The most recent research advocate for physical informed virtual loss function terms \cite{}, leading off to the vastly known field of Physics Informed Neural Networks.
 
 This models where created as numerical methods for solving Partial Differential Equations that embed physical modeling. It further extended to all fields that required PDE solving as a computationally efficient numerical alternative to other solvers.
 
 
 \subsection{Approximating the density function with PINNs}
-The most recent research, using PINNs, develop a way to not just learn functions, but to learn functional operators: Lagrangian, Hamiltonian, etc. This research \cite{} creates a neural network that takes the general coordinates $q$ and $\dot q$ as input, to provide the lagrangian as an output, and leverage the auto-differentiation capabilities of modern machine learning frameworks to enforce the euler-lagrange equation:
+The most recent research, using PINNs, develop a way to not just learn functions, but to learn functional operators: Lagrangian, Hamiltonian, etc. \cite{cranmer2020lagrangianneuralnetworks, greydanus2019hamiltonianneuralnetworks} The first research creates a neural network that takes the general coordinates $q$ and $\dot q$ as input, to provide the lagrangian as an output, taking advantage of the auto-differentiation capabilities of modern machine learning frameworks to enforce the euler-lagrange equation with gradient-descent methods:
 
 \begin{equation}
     \frac{d}{dt} \frac{\partial \mathcal{L}}{\partial \dot q} - \frac{\partial \mathcal{L}}{\partial q} = 0
 \end{equation}
-
-As usage of $q$ and $\dot q$ as inputs is very convenient for the auto-differentiation engines, making it further computationally feasible.
 
 \section{Data}
 

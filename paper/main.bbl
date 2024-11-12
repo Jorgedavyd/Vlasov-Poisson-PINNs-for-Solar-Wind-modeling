@@ -1,19 +1,50 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{comp_2}
 Yasser Abduallah, Jason~TL Wang, Prianka Bose, Genwei Zhang, Firas Gerges, and Haimin Wang.
 \newblock A deep learning approach to dst index prediction.
 \newblock {\em arXiv preprint arXiv:2205.02447}, 2022.
 
-\bibitem{2006LNCS.3732..554E}
-A.~{Ekenb{\"a}ck} and M.~{Holmstr{\"o}m}.
-\newblock {MHD modeling of the interaction between the solar wind and solar system objects}.
-\newblock 3732:554--562, 2006.
+\bibitem{BLUME202396}
+Kristina Blume, Marc Röger, and Robert Pitz-Paal.
+\newblock Simplified analytical model to describe wind loads and wind-induced tracking deviations of heliostats.
+\newblock {\em Solar Energy}, 256:96--109, 2023.
+
+\bibitem{cranmer2020lagrangianneuralnetworks}
+Miles Cranmer, Sam Greydanus, Stephan Hoyer, Peter Battaglia, David Spergel, and Shirley Ho.
+\newblock Lagrangian neural networks, 2020.
+
+\bibitem{Gombosi_2018}
+Tamas~I. Gombosi, Bart van~der Holst, Ward~B. Manchester, and Igor~V. Sokolov.
+\newblock Extended mhd modeling of the steady solar corona and the solar wind.
+\newblock {\em Living Reviews in Solar Physics}, 15(1), July 2018.
 
 \bibitem{Gosling2007}
 J.~T. Gosling.
 \newblock {\em The Solar Wind}.
 \newblock Elsevier, 2007.
+
+\bibitem{grandin2023hybridvlasovsimulationsoftxray}
+Maxime Grandin, Hyunju~K. Connor, Sanni Hoilijoki, Markus Battarbee, Yann Pfau-Kempf, Urs Ganse, Konstantinos Papadakis, and Minna Palmroth.
+\newblock Hybrid-vlasov simulation of soft x-ray emissions at the earth's dayside magnetospheric boundaries, 2023.
+
+\bibitem{greydanus2019hamiltonianneuralnetworks}
+Sam Greydanus, Misko Dzamba, and Jason Yosinski.
+\newblock Hamiltonian neural networks, 2019.
+
+\bibitem{guastavino2024forecastinggeoffectiveeventssolar}
+Sabrina Guastavino, Katsiaryna Bahamazava, Emma Perracchione, Fabiana Camattari, Gianluca Audone, Daniele Telloni, Roberto Susino, Gianalfredo Nicolini, Silvano Fineschi, Michele Piana, and Anna~Maria Massone.
+\newblock Forecasting geoffective events from solar wind data and evaluating the most predictive features through machine learning approaches, 2024.
+
+\bibitem{kumar2023physicsinformedneuralnetworks}
+Jai Kumar, David Zarzoso, Virginie Grandgirard, Jan Ebert, and Stefan Kesselheim.
+\newblock Physics informed neural networks applied to the description of wave-particle resonance in kinetic simulations of fusion plasmas, 2023.
+
+\bibitem{https://doi.org/10.1029/2023SW003561}
+Rong Lin, Zhekai Luo, Jiansen He, Lun Xie, Chuanpeng Hou, and Shuwei Chen.
+\newblock Prediction of solar wind speed through machine learning from extrapolated solar coronal magnetic field.
+\newblock {\em Space Weather}, 22(6):e2023SW003561, 2024.
+\newblock e2023SW003561 2023SW003561.
 
 \bibitem{windmodelling1}
 Takuma Matsumoto.
@@ -24,19 +55,38 @@ Takuma Matsumoto.
 {National Aeronautics and Space Administration}.
 \newblock Dscovr mission overview, 2023.
 
+\bibitem{Nicolaou_2018}
+G.~Nicolaou, G.~Livadiotis, C.~J. Owen, D.~Verscharen, and R.~T. Wicks.
+\newblock Determining the kappa distributions of space plasmas from observations in a limited energy range.
+\newblock {\em The Astrophysical Journal}, 864(1):3, aug 2018.
+
 \bibitem{comp_3}
 AS~Parnowski.
 \newblock Regression modeling method of space weather prediction.
 \newblock {\em Astrophysics and Space Science}, 323(2):169--180, 2009.
 
-\bibitem{comp_1}
-Iris Yan.
-\newblock Early prediction of geomagnetic storms by machine learning algorithms.
-\newblock 2024.
+\bibitem{sabbatini2023solarwindspeedestimate}
+Federico Sabbatini and Catia Grimani.
+\newblock Solar wind speed estimate with machine learning ensemble models for lisa, 2023.
+
+\bibitem{Stansby_2018}
+David Stansby, Chadi Salem, Lorenzo Matteini, and Timothy Horbury.
+\newblock A new inner heliosphere proton parameter dataset from the helios mission.
+\newblock {\em Solar Physics}, 293(11), November 2018.
+
+\bibitem{Verscharen_2016}
+Daniel Verscharen, Benjamin D.~G. Chandran, Kristopher~G. Klein, and Eliot Quataert.
+\newblock Collisionless isotropization of the solar-wind protons by compressive fluctuations and plasma instabilities.
+\newblock {\em The Astrophysical Journal}, 831(2):128, November 2016.
 
 \bibitem{10.3389/fspas.2023.1105797}
 Man Zhang, Xueshang Feng, Huichao Li, Ming Xiong, Fang Shen, Liping Yang, Xinhua Zhao, Yufen Zhou, and Xiaojing Liu.
 \newblock Numerical modeling of solar wind and coronal mass ejection in the inner heliosphere: A review.
 \newblock {\em Frontiers in Astronomy and Space Sciences}, 10, 2023.
+
+\bibitem{Zouganelis_2004}
+I.~Zouganelis, M.~Maksimovic, N.~Meyer‐Vernet, H.~Lamy, and K.~Issautier.
+\newblock A transonic collisionless model of the solar wind.
+\newblock {\em The Astrophysical Journal}, 606(1):542–554, May 2004.
 
 \end{thebibliography}
