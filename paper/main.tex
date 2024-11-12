@@ -6,7 +6,7 @@
 \usepackage{hyperref}
 \usepackage{cite}
 
-\title{Determining Solar Wind's distribution with Vlasov PINNs}
+\title{Statistical Mechanics Informed Neural Networks for Solar Wind modeling}
 \author{Jorge D. Enciso}
 \date{\today}
 
@@ -64,7 +64,7 @@ On the matter of Solar Wind modeling, several numerical approaches are developed
 
 \cite{johnson2022physics}
 
-\section{Kinetic Models}
+\section{Kinetic models and general constraints}
 In order to fully assume the magnetohydrodynamical model, interactions must converge to the Maxwell-Boltzmann thermodynamical distribution for certain conditions, implying a high colisionality degree, contrary to empirical observations of the Solar Wind. Therefore, the utilization of such a constrictive framework must be carefully evaluated before setting it up as a modeling constraints.
 
 Moreover, trying to answer quasy-isotropic behavior on near-earth L1-Lagrange point, different research papers assume the bi-Maxwellian or Kappa temperature distributions \cite{Stansby_2018, Nicolaou_2018, Zouganelis_2004}, carrying out the Maxwell-Boltzmann thermodynamical distribution. Nevertheless, this assumption seems overly ideal. As a possible option, the inclusion of numerical distributions could bring insights into the interactions between plasma ionized particles.
@@ -94,6 +94,10 @@ In this case, governed by electromagnetic interactions. Therefore, replacing the
 \end{equation}
 
 This is a widely used model to account for anisotropies on Solar Wind \cite{Verscharen_2016} and as a chosen alternative to MHD models \cite{grandin2023hybridvlasovsimulationsoftxray}.
+
+\subsection{Liouville's theorem}
+
+\subsection{Entropy}
 
 \section{Physics Informed Machine Learning}
 Usually, solely data-driven methods require huge volumes of high-quality data with black box algorithms that prevent interpretability, a key factor for physical modeling. The most recent research advocate for physical informed virtual loss function terms \cite{}, leading off to the vastly known field of Physics Informed Neural Networks.

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.11.6)  12 NOV 2024 06:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.11.6)  12 NOV 2024 09:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -295,7 +295,7 @@ Overfull \hbox (3.82271pt too wide) in paragraph at lines 56--56
 
 LaTeX Warning: Citation `johnson2022physics' on page 4 undefined on input line 65.
 
-[4] [5] [6] [7] (./main.bbl [8] [9]) [10] (./main.aux)
+[4] [5] [6] [7] [8] (./main.bbl [9] [10]) [11] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -305,21 +305,21 @@ L3 programming layer <2024-02-20>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 19AE8BC1FA3A484FF4F84C508980BF60;4262.
+(rerunfilecheck)             Checksum: E9AE6EF537C9777DABA2A998EA38A314;4640.
  ) 
 Here is how much of TeX's memory you used:
- 9349 strings out of 476076
- 142057 string characters out of 5793775
- 1937187 words of memory out of 5000000
- 31279 multiletter control sequences out of 15000+600000
+ 9354 strings out of 476076
+ 142124 string characters out of 5793775
+ 1936187 words of memory out of 5000000
+ 31281 multiletter control sequences out of 15000+600000
  568408 words of font info for 75 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,6n,79p,784b,561s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,79p,784b,560s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (10 pages, 194135 bytes).
+Output written on main.pdf (11 pages, 194279 bytes).
 PDF statistics:
- 306 PDF objects out of 1000 (max. 8388607)
- 261 compressed objects within 3 object streams
- 67 named destinations out of 1000 (max. 500000)
- 169 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 320 PDF objects out of 1000 (max. 8388607)
+ 274 compressed objects within 3 object streams
+ 70 named destinations out of 1000 (max. 500000)
+ 185 words of extra memory for PDF output out of 10000 (max. 10000000)
 
