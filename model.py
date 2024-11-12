@@ -1,23 +1,41 @@
 from lightorch.training.supervised import Module
+from lightorch.nn import DeepNeuralNetwork
 from torch import nn, Tensor
-from .loss import criterion
+from .loss import StatisticalMechanicsInformedLoss
+from typing import Sequence, Union
 
 
-class model_name(nn.Module):
+class PINN(DeepNeuralNetwork):
     def __init__(
         self,
-    ) -> None:
-        super().__init__()
+        in_features: int,
+        layers: Sequence[int],
+        activations: Sequence[Union[str, None]],
+    ):
+        super().__init__(
+            in_features,
+            layers,
+            list(
+                map(
+                    lambda activation: (
+                        getattr(nn, activation) if activation is not None else None
+                    ),
+                    activations,
+                )
+            ),
+        )
 
-    def forward(self, x: Tensor) -> Tensor:
-        return out
+    def forward(self, F: Tensor) -> Tensor:
+        return super().forward(F)
 
 
 class Model(Module):
     def __init__(self, **hparams) -> None:
         super().__init__(**hparams)
-        self.model = model_name()
-        self.criterion = criterion()
+        self.model = PINN(3, hparams["layers"], hparams["activations"])
+        self.criterion = StatisticalMechanicsInformedLoss(
+            hparams["alpha_1"], hparams["alpha_2"]
+        )
 
     def forward(self, x: Tensor) -> Tensor:
         return self.model(x)

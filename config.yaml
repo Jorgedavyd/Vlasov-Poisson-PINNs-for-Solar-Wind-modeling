@@ -1,7 +1,7 @@
 trainer:
   logger: true
   enable_checkpointing: true
-  max_epochs: 250
+  max_epochs: 2000
   accelerator: cuda
   devices:  1
   precision: 32
