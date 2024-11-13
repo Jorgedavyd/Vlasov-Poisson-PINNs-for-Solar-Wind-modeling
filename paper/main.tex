@@ -175,19 +175,15 @@ The neural network is trained using the standard gradient-descent based optimiza
 The loss function consists on a virtual term, three integral boundary condition terms, and a l2 regularizer term:
 
 \begin{equation}
-    \mathcal{L}_{virtual}\left(\mathbf{E}, \mathbf{B}, \mathbf{v}, \mathbf{r}; \mathbf{\theta}\right) = \left(\frac{\partial f_{\alpha}}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}}  f_{\alpha} + \frac{q (\mathbf{E} + \mathbf{v} \times \mathbf{B})}{m} \cdot \nabla_{\mathbf{v}} f_\alpha \right)^2
+    \mathcal{L}_{liouville}\left(\mathbf{E}, \mathbf{B}, \mathbf{v}, \mathbf{r}; \mathbf{\theta}\right) = \left(\frac{\partial f_{\alpha}}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}}  f_{\alpha} + \frac{q (\mathbf{E} + \mathbf{v} \times \mathbf{B})}{m} \cdot \nabla_{\mathbf{v}} f_\alpha \right)^2
 \end{equation}
 
 \begin{equation}
-    \mathcal{L}_{BC_1} \left(x; \mathbf{\theta}\right) = \left(\int_{x \sim X} f_\alpha (\mathbf{v}, \mathbf{r}, t) d^3\mathbf{v} d^3\mathbf{r} - 1\right)^2
+    \mathcal{L}_{prob} \left(x; \mathbf{\theta}\right) = \left(\int_{x \sim X} f_\alpha (\mathbf{v}, \mathbf{r}, t) d^3\mathbf{v} d^3\mathbf{r} - 1\right)^2
 \end{equation}
 
 \begin{equation}
-    \mathcal{L}_{BC_2} \left(x; \mathbf{\theta}\right) = \left(\int_{x \sim X} f_\alpha (\mathbf{v}, \mathbf{r}, t) d^3\mathbf{v} - n_\alpha(\mathbf{r}, t) \right)^2
-\end{equation}
-
-\begin{equation}
-    \mathcal{L}_{BC_3} \left(x; \mathbf{\theta}\right) = \left(\sum_{\alpha} q_\alpha n_\alpha  \mathbf{u}_\alpha- j(\mathbf{r}, t) \right)^2
+    \mathcal{L}_S(\mathbf{r}, \mathbf{v}, t) = \left(\frac{d}{dt}\int f_\alpha \log f_\alpha \right)^2
 \end{equation}
 
 \begin{equation}
@@ -197,7 +193,7 @@ The loss function consists on a virtual term, three integral boundary condition 
 Getting our final objective function:
 
 \begin{equation}
-    \mathcal{L}\left[\mathcal{L}_{virtual}, \mathcal{L}_{BC}, \mathcal{L}_{regularizer}\right] = \alpha_1 \mathcal{L}_{virtual} + \alpha_2 \sum_{i} \mathcal{L}_{BC_i} + \lambda \mathcal{L}_{regularizer}
+    \mathcal{L}\left[\mathcal{L}_{liouville}, \mathcal{L}_{prob}, \mathcal{L}_{S} \mathcal{L}_{regularizer}\right] = \alpha_1 \mathcal{L}_{liouville} + \alpha_2 \mathcal{L}_{prob} + \alpha_3 \mathcal{L}_{S} + \lambda \mathcal{L}_{regularizer}
 \end{equation}
 
 \section{Results}
