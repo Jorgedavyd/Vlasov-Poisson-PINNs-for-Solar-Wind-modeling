@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.11.9)  13 NOV 2024 20:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.11.6)  13 NOV 2024 15:21
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -287,19 +287,29 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
- [2] [3]
-Overfull \hbox (3.82271pt too wide) in paragraph at lines 56--56
+ [2]
+
+LaTeX Warning: Citation `Verscharen2022' on page 3 undefined on input line 30.
+
+[3]
+Overfull \hbox (3.82271pt too wide) in paragraph at lines 64--64
 []\OT1/cmr/bx/n/14.4 Full com-press-ible 3D MHD sim-u-la-tion of so-lar wind 
  []
 
+[4]
 
-LaTeX Warning: Citation `johnson2022physics' on page 4 undefined on input line 67.
+LaTeX Warning: Citation `johnson2022physics' on page 5 undefined on input line 75.
 
-[4] [5] [6]
-./main.tex:128: Undefined control sequence.
+
+Overfull \hbox (12.51791pt too wide) in paragraph at lines 77--77
+[]\OT1/cmr/bx/n/14.4 Statistical-Physics-Informed Neu-ral Net-works (Stat-
+ []
+
+[5] [6] [7]
+./main.tex:140: Undefined control sequence.
 <recently read> \f 
                    
-l.128 where $\f
+l.140 where $\f
                _\alpha \log f_\alpha$ represents the local entropy density i...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -307,7 +317,7 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-[7] [8] [9] (./main.bbl [10] [11]) [12] (./main.aux)
+[8] [9] [10] (./main.bbl [11] [12]) [13] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -317,21 +327,21 @@ L3 programming layer <2024-02-20>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 5056C1EBC5648893045014AD34F38E52;4484.
+(rerunfilecheck)             Checksum: 091A0471E9FECACFF3460A7E5D2996D6;4871.
  ) 
 Here is how much of TeX's memory you used:
- 9357 strings out of 476076
- 142153 string characters out of 5793775
+ 9364 strings out of 476076
+ 142308 string characters out of 5793775
  1936187 words of memory out of 5000000
- 31280 multiletter control sequences out of 15000+600000
+ 31282 multiletter control sequences out of 15000+600000
  568408 words of font info for 75 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,6n,79p,784b,561s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,79p,784b,560s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (12 pages, 192381 bytes).
+Output written on main.pdf (13 pages, 195108 bytes).
 PDF statistics:
- 320 PDF objects out of 1000 (max. 8388607)
- 275 compressed objects within 3 object streams
- 74 named destinations out of 1000 (max. 500000)
+ 333 PDF objects out of 1000 (max. 8388607)
+ 287 compressed objects within 3 object streams
+ 79 named destinations out of 1000 (max. 500000)
  177 words of extra memory for PDF output out of 10000 (max. 10000000)
 

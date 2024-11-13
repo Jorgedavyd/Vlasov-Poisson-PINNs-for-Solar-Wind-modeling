@@ -40,6 +40,10 @@ Sabrina Guastavino, Katsiaryna Bahamazava, Emma Perracchione, Fabiana Camattari,
 Jai Kumar, David Zarzoso, Virginie Grandgirard, Jan Ebert, and Stefan Kesselheim.
 \newblock Physics informed neural networks applied to the description of wave-particle resonance in kinetic simulations of fusion plasmas, 2023.
 
+\bibitem{li2023physicsinformedneuraloperatorlearning}
+Zongyi Li, Hongkai Zheng, Nikola Kovachki, David Jin, Haoxuan Chen, Burigede Liu, Kamyar Azizzadenesheli, and Anima Anandkumar.
+\newblock Physics-informed neural operator for learning partial differential equations, 2023.
+
 \bibitem{https://doi.org/10.1029/2023SW003561}
 Rong Lin, Zhekai Luo, Jiansen He, Lun Xie, Chuanpeng Hou, and Shuwei Chen.
 \newblock Prediction of solar wind speed through machine learning from extrapolated solar coronal magnetic field.
