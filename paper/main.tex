@@ -1,59 +1,25 @@
-\documentclass[twoside,11pt]{article}
+\documentclass[12pt]{article}
 
-\usepackage{blindtext}
 \usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{cite}
 
-% Any additional packages needed should be included after jmlr2e.
-% Note that jmlr2e.sty includes epsfig, amssymb, natbib and graphicx,
-% and defines many common macros, such as 'proof' and 'example'.
-%
-% It also sets the bibliographystyle to plainnat; for more information on
-% natbib citation styles, see the natbib documentation, a copy of which
-% is archived at http://www.jmlr.org/format/natbib.pdf
-
-% Available options for package jmlr2e are:
-%
-%   - abbrvbib : use abbrvnat for the bibliography style
-%   - nohyperref : do not load the hyperref package
-%   - preprint : remove JMLR specific information from the template,
-%         useful for example for posting to preprint servers.
-%
-% Example of using the package with custom options:
-%
-% \usepackage[abbrvbib, preprint]{jmlr2e}
-
-\usepackage{jmlr2e}
-
-\newcommand{\dataset}{{\cal D}}
-\newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
-\newcommand{\diff}[2]{\frac{d #1}{d #2}}
-
-\usepackage{lastpage}
-\jmlrheading{25}{2024}{1-\pageref{LastPage}}{12/24; Revised ?/25}{?/25}{21-0000}{Jorge D. Enciso}
-
-% Short headings should be running head and authors last names
-
-\ShortHeadings{Statistical Mechanics Informed Neural Networks for Solar Wind modeling}{Jorge D. Enciso}
-\firstpageno{1}
+\title{Statistical Mechanics Informed Neural Networks for Solar Wind modeling}
+\author{Jorge D. Enciso}
+\date{\today}
 
 \begin{document}
 
-\title{Statistical Mechanics Informed Neural Networks for Solar Wind modeling}
-
-\author{\name Jorge D. Enciso \email jorged.encyso@gmail.com \\
-    \addr Asuncion, Paraguay}
-
-\editor{My editor}
-
 \maketitle
 
-\begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
-The solar wind, a collisionless, quasi-neutral plasma, presents unique challenges for modeling due to its deviation from classical assumptions such as the Maxwell-Boltzmann distribution. Traditional numerical and analytical approaches are computationally expensive and often rely on oversimplified empirical constraints. Recent advancements in machine learning, particularly Physics-Informed Neural Networks (PINNs), offer an efficient alternative for solving partial differential equations while incorporating physical laws. This research introduces a novel framework: Statistical Mechanics Informed Neural Networks, tailored for modeling the kinetic behavior of the solar wind. By leveraging statistical mechanics and avoiding restrictive magnetohydrodynamic assumptions, the proposed methodology directly approximates the solar wind's probability density function. Using data from near-Earth L1-Lagrange point observations, this work demonstrates the feasibility of PINNs in accurately capturing the solar wind's anisotropic and non-thermal dynamics. The findings highlight the potential of integrating statistical physics and machine learning for advanced space plasma modeling, paving the way for more precise solar-terrestrial interaction predictions.
+\begin{abstract}
+    %TODO
 \end{abstract}
 
-\begin{keywords}
-Physics informed Neural Networks, Solar Wind, Statistical Mechanics, Vlasov's Equation, Maxwell Equations, Ideal MHD
-\end{keywords}
+\tableofcontents
+\newpage
 
 \section{Introduction}
 
@@ -65,15 +31,27 @@ The solar wind presents unique challenges due to its deviation from classical as
 
 On the other hand, using numerical approximators to model plasma dynamics ends up being computationally expensive. Take the Ideal MHD as an example:
 
-\begin{align*}
-    \nabla \cdot \textbf{E} &= \frac{\sigma}{\epsilon_0} \\
-    \nabla \cdot \textbf{B} &= 0 \\
-    \frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \textbf{v}) &= 0 \\
-    \frac{d}{dt} \left( \frac{p}{\rho^\gamma} \right) &= 0 \\
-    \textbf{E} + \textbf{v} \times \textbf{B} &= 0 \\
-    \frac{\partial \textbf{B}}{\partial t} &= \nabla \times (\textbf{v} \times \textbf{B}) \\
-    \textbf{J} \times \textbf{B} &= \frac{(\textbf{B}\cdot \nabla) \textbf{B}}{\mu_0} - \nabla \left(\frac{B^2}{2\mu_0}\right)
-\end{align*}
+\begin{equation}
+    \nabla \cdot \textbf{E} = \frac{\sigma}{\epsilon_0}
+\end{equation}
+\begin{equation}
+    \nabla \cdot \textbf{B} = 0
+\end{equation}
+\begin{equation}
+    \frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \textbf{v}) = 0
+\end{equation}
+\begin{equation}
+    \frac{d}{dt} \left( \frac{p}{\rho^\gamma} \right)= 0
+\end{equation}
+\begin{equation}
+    \textbf{E} + \textbf{v} \times \textbf{B} = 0
+\end{equation}
+\begin{equation}
+    \frac{\partial \textbf{B}}{\partial t} = \nabla \times (\textbf{v} \times \textbf{B})
+\end{equation}
+\begin{equation}
+    \textbf{J} \times \textbf{B} = \frac{(\textbf{B}\cdot \nabla) \textbf{B}}{\mu_0} - \nabla \left(\frac{B^2}{2\mu_0}\right)
+\end{equation}
 
 where $\mathbf{E}$ is the electric field, $\sigma$ the charge density, $\mathbf{B}$ the magnetic field, $p$ the pressure, $\rho$ the mass density, $v$ the general velocity, and $\gamma $ the adiabatic index.
 
@@ -96,9 +74,6 @@ They use the VOICE code to numerically solve the Vlasov-Poisson system of equati
 
 This research \cite{johnson2022physics} is regarded as one of the first physics informed approaches towards geoeffective solar wind prediction. It uses L1-Lagrange spacecraft readings and enforces the Ohm's Law for an ideal plasma, following the Ideal MHD model for space plasma. It uses a wide variety of model architectures (GRU, LSTM, 2D CNN ResNets, etc.) to test their effectiveness under this task.
 
-\subsection{Statistical-Physics-Informed Neural Networks (Stat-PINNs): A Machine Learning Strategy for Coarse-graining Dissipative Dynamics}
-
-
 
 \section{Kinetic models and general constraints}
 In order to fully assume the magnetohydrodynamical model, interactions must converge to the Maxwell-Boltzmann thermodynamical distribution for certain conditions, implying a high colisionality degree, contrary to empirical observations of the Solar Wind. Therefore, the utilization of such a constrictive framework must be carefully evaluated before setting it up as a modeling constraints.
@@ -107,29 +82,25 @@ Moreover, trying to answer quasy-isotropic behavior on near-earth L1-Lagrange po
 
 That's why, this work departs from that approach, seeking the description of Solar Wind kinetic model without magnetohydrodynamical systems nor temperature distributions, fully describing these interactions with a physics informed data-driven structure as a substitution of empirical assumptions.
 
-\subsection{Boltzmann's Equation}
+\subsection{Boltzmann-Vlasov Equations}
 
 In the context of kinetic plasma theory, various statistical descriptors are applied, provided they make appropriate assumptions about particle interactions. Boltzmann's equation is often used to describe the evolution of the particle distribution function, $f_\alpha(\mathbf{r}, \mathbf{v}, t)$, by considering the effects of particle collisions:
 
-\[
+\begin{equation}
     \frac{\partial f_\alpha}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}} f_\alpha + \mathbf{a} \cdot \nabla_{\mathbf{v}} f_\alpha = \left(\frac{\delta f}{\delta t}\right)_{\mathrm{col}}
-\]
+\end{equation}
 
 The left side of the equation describes the rate of change of $f_\alpha$ due to the particles' motion and external forces, while the term $\left( \frac{\delta f_\alpha}{\delta t} \right)_{col}$on the right side represents the change in $f_\alpha$ due to collisions.
 
 This formulation is essential for systems where collisions are frequent and lead to a Maxwell-Boltzmann distribution under equilibrium conditions. However, for plasmas like the solar wind, where collisions are rare, a collisionless description is more appropriate.
 
-\subsection{Vlasov's Equation}
-
 The Vlasov equation is the collisionless analog of the Boltzmann equation, making it a more suitable kinetic model for the solar wind. It describes the evolution of the particle distribution function in a collisionless plasma, where interactions are primarily governed by external forces rather than particle collisions:
 
-\[
-    \frac{\partial f_\alpha}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}} f_\alpha + \frac{\mathbf{F}}{m} \cdot \nabla_{\mathbf{v}} f_\alpha = 0
-\]
+\begin{equation} \frac{\partial f_\alpha}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}} f_\alpha + \frac{\mathbf{F}}{m} \cdot \nabla_{\mathbf{v}} f_\alpha = 0 \end{equation}
 
 In this context, the system is typically dominated by electromagnetic interactions. Thus, substituting with the Lorentz force is the ideal case:
 
-\begin{equation} \label{eq:liouville}
+\begin{equation}
     \frac{\partial f_\alpha}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}} f_\alpha + \frac{q}{m} (\mathbf{E} + \mathbf{v} \times \mathbf{B}) \cdot \nabla_{\mathbf{v}} f_\alpha = 0
 \end{equation}
 
@@ -137,56 +108,113 @@ This form of Vlasov equation is widely used to capture the dynamics of collision
 
 Note that Vlasov's equation is tightly related to statistical mechanics through Liouville's theorem:
 
-\[
-\frac{\mathrm{df_\alpha(\mathbf{r}, \mathbf{v}, t)}}{\mathrm{dt}} = 0
-\]
+\begin{equation}
+    \frac{\mathrm{df_\alpha(\mathbf{r}, \mathbf{v}, t)}}{\mathrm{dt}} = 0
+\end{equation}
 
 If we compute use the chain rule along the phase and time space, we end up with the following expression:
-\[
+\begin{equation}
     \frac{\mathrm{df_\alpha(\mathbf{r}, \mathbf{v}, t)}}{\mathrm{dt}} = \frac{\partial f_\alpha}{\partial t} + \nabla_{\mathbf{r}} f_\alpha \frac{\partial \mathbf{r}}{\partial t} + \nabla_{\mathbf{v}} f_\alpha \frac{\partial \mathbf{v}}{\partial t} = 0
-\]
+\end{equation}
 
 which indeed is:
 
-\[
+\begin{equation}
     \frac{\mathrm{df_\alpha(\mathbf{r}, \mathbf{v}, t)}}{\mathrm{dt}} = \frac{\partial f_\alpha}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}} f_\alpha + \mathbf{a} \cdot \nabla_{\mathbf{v}} f_\alpha = 0
-\]
+\end{equation}
+
 
 \subsection{Entropy}
 
 According to the second law of thermodynamics, the entropy of a closed system cannot decrease over time; it may increase or remain constant. In the kinetic framework, the entropy production rate is given by the time derivative of the entropy functional:
 
-\[
+\begin{equation}
     0 \leq \frac{\mathrm{d}}{\mathrm{dt}} \int f_\alpha \log f_\alpha d^3\mathbf{r} d^3\mathbf{v}
-\]
+\end{equation}
 
 where $\f_\alpha \log f_\alpha$ represents the local entropy density in phase space. In a collisionless plasma, this entropy can remain constant if the system maintains phase-space coherence, but under realistic conditions, such as wave-particle interactions, entropy may increase as energy cascades through different scales. This formalism highlights how irreversible processes in the plasma lead to an increase in degrees of freedom, a key consideration for accurately modeling solar wind behavior.
 
-For this case particularly, the colisionless nature of the plasma and Liouville's theorem assumes no change in entropy, if we use Leibniz method and compute the time derivative of the integrant:
-\[
+For this case particularly, the collisionless nature of the plasma and Liouville's theorem assumes no change in entropy, if we use Leibniz method and compute the time derivative of the integrant:
+
+\begin{equation}
     \frac{d}{dt} f_\alpha \log f_\alpha = \frac{df_\alpha}{dt} \log f_\alpha + \frac{f_\alpha}{f_\alpha}\frac{df_\alpha}{dt} = 0 + 0 = 0
-\]
-
-Thus, the entropy of this system is defined as follows:
-
-\begin{equation} \label{eq:entropy}
-    \frac{\mathrm{d}}{\mathrm{dt}} \int f_\alpha \log f_\alpha d^3\mathbf{r} d^3\mathbf{v} = 0
 \end{equation}
 
+\subsection{Maxwell's equations}
+
+To complete the description of the solar wind, the Maxwell's electrodynamic formulation provides our final description to well-round the kinetic analysis of the plasma:
+
+\begin{align*}
+    \nabla \cdot E &= \frac{\sum_{\alpha} \rho_\alpha}{\epsilon_0} \\
+    \nabla \cdot B &= 0 \\
+    \nabla \times E &= - \frac{\partial B}{\partial t} \\
+    \nabla \times B &= \mu_0 \left(J + \epsilon_0 \frac{\partial E}{\partial t}\right)
+\end{align*}
+
+\subsection{Complete dynamical system}
+For some general universal approximator $f_n$, also interpreted as dynamical descriptor in this context, there is a parameter space $\theta_n$ tied to the governing constraints ($g_i$) for its respective phenomena:
+
+\begin{align*}
+    f_n(\mathbf{r}, \mathbf{v}, t; \theta_n): \nabla f_n = \sum_{i} \lambda_i \nabla g_i
+\end{align*}
+
+For this sake, we employ a Statistical mechanics informed Vlasov-Maxwell model that fully describes the known, ideal behavior of the solar wind:
+
+\begin{align*}
+    \frac{\partial f_\alpha}{\partial t} + f_v \cdot \nabla_{\mathbf{r}} f_\alpha &+ \frac{q_\alpha ( f_E + f_v \times f_B)}{m_\alpha} \cdot \nabla_{\mathbf{v}} f_\alpha = 0 \text{ (Vlasov)}\\
+    \sum_{\alpha} q_\alpha \int &f_\alpha d^3(f_v) = 0 \text{ (Quasineutrality)}\\
+\frac{d}{dt} \int &f_\alpha \log f_\alpha d^3r d^3(f_v) = 0 \text{ (Liouville)}\\
+\nabla \cdot f_E &= \frac{\sum_{\alpha} \rho_\alpha}{\epsilon_0} \\
+\nabla \cdot f_B &= 0 \\
+\nabla \times f_E &= - \frac{\partial f_B}{\partial t} \\
+\nabla \times f_B &= \mu_0 \left(J + \epsilon_0 \frac{\partial f_E}{\partial t}\right) \text{ (Maxwell)} \\
+\end{align*}
+
+$f_\alpha$ is the kinetic description of each specie, $f_E$ is the electric field descriptor, $f_B$ is the magnetic field descriptor, $f_v$ is the velocity descriptor, $J$ is the current density (derived from $f_\alpha$), and $\rho_\alpha$ is the charge density (derived from $f_\alpha$).
+
+The cross-dependance between both models for the backpropagation process is crucial; thus, a backbone architecture for the electromagnetic descriptor engineered to exploit the backpropagation of the kinetic model can lead to faster convergence in addition to the Maxwell constraints.
+
+A cross-training process that relies on the bonds between the Maxwell and Vlasov PDE criterions will be critical; the PDE loss APORTE to the training process will be gradually incremented through epochs, and inversely correlated with the distances from the boundary contour delimiting the training space to minimize the error margin of non-representative results in the middle of the training process.
+
+This structure provides an optimization process overtly relying on PDE residuals; therefore, an appropiate set of boundary conditions is crucial for the convergence of the physics informed neural networks.
+
+\subsubsection{Scope and boundary conditions}
+The current work utilizes data from L1-Lagrange readings; accordingly, the phase space is constrained to fit predictions up to the Earth's position. As so, we define our parameter space:
+
+\begin{align*}
+    r &\in \left[10R_E, 240R_E\right] \\
+    v_x &\in \left[300, 1000\right]\frac{km}{s} \\
+    t &\in \left[0, 7200]s \\
+\end{align*}
+
+For the kinetic and electormagnetic model, we define the following Dirichlet boundary conditions:
+
+\begin{align*}
+    f_\alpha\left(r, v_{max}, t) &= 0 \\
+    f_\alpha\left(r, v_{min}, t) &= 0 \\
+    f_v\left(r_{min}, t) &= \mathbf{v}_{L1}(t) \\
+    f_v\left(r_{max}, t) &= \mathbf{v}_{Earth}(t) \\
+    f_E\left(r_{min}, t\right) &= E_{L1}(t) \\
+    f_E\left(r_{max}, t\right) &= E_{Earth}(t) \\
+    f_B\left(r_{min}, t\right) &= B_{L1}(t) \\
+    f_B\left(r_{max}, t\right) &= B_{Earth}(t)
+\end{align*}
 
 \section{Physics Informed Machine Learning}
 Usually, solely data-driven methods require huge volumes of high-quality data with black box algorithms that prevent interpretability, a key factor for physical modeling. The most recent research advocate for physical informed virtual loss function terms \cite{}, leading off to the vastly known field of Physics Informed Neural Networks.
 
-This models were created as numerical methods for solving Partial Differential Equations that embed physical modeling. It further extended to all fields that required PDE solving as a computationally efficient numerical alternative to other solvers.
+These models were created as numerical methods for solving Partial Differential Equations that embed physical modeling. It further extended to all fields that required PDE solving as a computationally efficient numerical alternative to other solvers.
 
 \subsection{Approximating the density function with PINNs}
 The most recent research, using PINNs, develop a way to not just learn functions, but to learn functional operators: Lagrangian, Hamiltonian, etc. \cite{cranmer2020lagrangianneuralnetworks, greydanus2019hamiltonianneuralnetworks} The first research creates a neural network that takes the general coordinates $q$ and $\dot q$ as input, to provide the lagrangian as an output, taking advantage of the auto-differentiation capabilities of modern machine learning frameworks to enforce the euler-lagrange equation with gradient-descent methods:
 
-\[
+\begin{equation}
     \frac{d}{dt} \frac{\partial \mathcal{L}}{\partial \dot q} - \frac{\partial \mathcal{L}}{\partial q} = 0
-\]
+\end{equation}
 
 The current work extrapolates this concept to the field of density functions, embedding it into the training phase by ensuring the normalized nature of a density function, the second law of thermodynamics, and systems governed by kinetic theory following Liouville's theorem.
+
+This model establishes a cornerstone for solar wind modeling, bonding the kinetic model distribution to the results of the electromagnetic model, extending the training space from     L1 Lagrange to a whole grid interval from L1 to the Earth.
 
 \section{Data}
 
@@ -206,33 +234,6 @@ The WIND spacecraft, launched in 1994, is part of the Global Geospace Science in
 \subsection{Neural Architecture Search (NAS)}
 As an intermediate step before training, a hyperparameter grid search algorithm based in Bayesian multi-objective optimization is employed to find the neural architecture. The Pareto front is plotted, selecting minimization of neural complexity and loss function.
 
-\subsection{Loss function}
-The neural network is trained using the standard gradient-descent based optimization algorithm: Adam. One Cycle learning rate scheduler imizer is used to facilitate the convergence to a learning rate plateau. L2 regularizer and dropout is implemented to avoid overfitting.
-
-The loss function consists on Liouville's theorem (Equation \ref{eq:liouville}), the entropy constraint (Equation \ref{eq:entropy}), a normalization term for probability density functions, and a regularizer term.
-
-\begin{equation}
-    \mathcal{L}_{Liouville}\left(\mathbf{E}, \mathbf{B}, \mathbf{v}, \mathbf{r}; \mathbf{\theta}\right) = \left(\frac{\partial f_{\alpha}}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}}  f_{\alpha} + \frac{q (\mathbf{E} + \mathbf{v} \times \mathbf{B})}{m} \cdot \nabla_{\mathbf{v}} f_\alpha \right)^2
-\end{equation}
-
-\begin{equation}
-    \mathcal{L}_{P} \left(x; \mathbf{\theta}\right) = \left(\int_{x \sim X} f_\alpha (\mathbf{v}, \mathbf{r}, t) d^3\mathbf{v} d^3\mathbf{r} - 1\right)^2
-\end{equation}
-
-\begin{equation}
-    \mathcal{L}_S(\mathbf{r}, \mathbf{v}, t) = \left(\frac{d}{dt}\int f_\alpha \log f_\alpha \right)^2
-\end{equation}
-
-\begin{equation}
-    \mathcal{L}_{regularizer} \left( \mathbf{\theta} \right) = \mathbb{E}_{w \in \mathbf{\theta}}\left[ w ^ 2 \right]
-\end{equation}
-
-Getting our final objective function:
-
-\begin{equation}
-    \mathcal{L}\left[\mathcal{L}_{Liouville}, \mathcal{L}_{P}, \mathcal{L}_{S}, \mathcal{L}_{regularizer}\right] = \alpha_1 \mathcal{L}_{Liouville} + \alpha_2 \mathcal{L}_{P} + \alpha_3 \mathcal{L}_{S} + \lambda \mathcal{L}_{regularizer}
-\end{equation}
-
 \section{Results}
 
 \section{Discussion}
@@ -242,16 +243,7 @@ This work demonstrated the effectiveness of Physics-Informed Neural Networks to 
 
 Future work will focus on improving the architecture design with Physics informed Neural Operators (PINOs) \cite{li2023physicsinformedneuraloperatorlearning} by embedding Maxwell's equations for data continuization through differentiable splines, the satellite data dependance inhibits the introduction os such powerful frameworks in this case.
 
+\bibliographystyle{plain}
 
-\acks{}
-
-\newpage
-
-\appendix
-
-\section{}
-
-\vskip 0.2in
-\bibliography{}
-
+\bibliography{references}
 \end{document}
