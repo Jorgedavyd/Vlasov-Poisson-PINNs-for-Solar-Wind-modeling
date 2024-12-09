@@ -162,12 +162,11 @@ For this sake, we employ a Statistical mechanics informed Vlasov-Maxwell model t
 
 \begin{align*}
     \frac{\partial f_\alpha}{\partial t} + f_v \cdot \nabla_{\mathbf{r}} f_\alpha &+ \frac{q_\alpha ( f_E + f_v \times f_B)}{m_\alpha} \cdot \nabla_{\mathbf{v}} f_\alpha = 0 \text{ (Vlasov)}\\
-    \sum_{\alpha} q_\alpha \int &f_\alpha d^3(f_v) = 0 \text{ (Quasineutrality)}\\
 \frac{d}{dt} \int &f_\alpha \log f_\alpha d^3r d^3(f_v) = 0 \text{ (Liouville)}\\
-\nabla \cdot f_E &= \frac{\sum_{\alpha} \rho_\alpha}{\epsilon_0} \\
+\nabla \cdot f_E &= 0 \text{ (Quasineutrality)}\\
 \nabla \cdot f_B &= 0 \\
 \nabla \times f_E &= - \frac{\partial f_B}{\partial t} \\
-\nabla \times f_B &= \mu_0 \left(J + \epsilon_0 \frac{\partial f_E}{\partial t}\right) \text{ (Maxwell)} \\
+\nabla \times f_B &= \mu_0 \left(J + \epsilon_0 \frac{\partial f_E}{\partial t}\right) \\
 \end{align*}
 
 $f_\alpha$ is the kinetic description of each specie, $f_E$ is the electric field descriptor, $f_B$ is the magnetic field descriptor, $f_v$ is the velocity descriptor, $J$ is the current density (derived from $f_\alpha$), and $\rho_\alpha$ is the charge density (derived from $f_\alpha$).

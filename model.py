@@ -26,7 +26,7 @@ class PINN(DeepNeuralNetwork):
         )
 
     def forward(self, F: Tensor) -> Tensor:
-        return super().forward(F)
+        return super().forward()
 
 
 class Model(Module):
@@ -34,7 +34,8 @@ class Model(Module):
         super().__init__(**hparams)
         self.model = PINN(3, hparams["layers"], hparams["activations"])
         self.criterion = StatisticalMechanicsInformedLoss(
-            hparams["alpha_1"], hparams["alpha_2"]
+            hparams["alpha_1"], hparams["alpha_2"], hparams["alpha_3"],
+            PINN(), PINN(), PINN(), PINN()
         )
 
     def forward(self, x: Tensor) -> Tensor:

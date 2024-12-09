@@ -1,7 +1,7 @@
 from lightorch.nn.criterions import LighTorchLoss
 from torch import Tensor
 from typing import Callable, Tuple
-from scipy.constants import e, proton_mass
+from scipy.constants import e, m_e, m_p, mu_0, epsilon_0
 import torch
 from torchquad import MonteCarlo, set_up_backend
 
@@ -13,47 +13,53 @@ class StatisticalMechanicsInformedLoss(LighTorchLoss):
         alpha_1: float,
         alpha_2: float,
         alpha_3: float,
-        alpha_4: float,
+        f_E: Callable,
+        f_B: Callable,
+        f_e: Callable,
+        f_p: Callable,
     ) -> None:
         super().__init__(
             labels=[
                 "Vlasov",
                 "Liouville",
-                "Quasyneutrality",
                 "Maxwell",
             ],
             factors={
                 "Vlasov": alpha_1,
                 "Liouville": alpha_2,
-                "Quasyneutrality": alpha_3,
-                "Maxwell": alpha_4,
+                "Maxwell": alpha_3,
             },
         )
         self.integral = MonteCarlo()
+        self.f_E = f_E
+        self.f_B = f_B
+        self.f_e = f_e
+        self.f_p = f_p
 
-    def vlasov(self, f: Tensor, r: Tensor, v: Tensor, t: Tensor, E: Tensor, B: Tensor) -> Tensor:
+    def vlasov(self, f_alpha: Tensor, input: Tensor, v: Tensor, E: Tensor, B: Tensor, m_alpha: float, q_alpha: float) -> Tensor:
         """
-        This is the solution for the alpha specie. The solution to the overall
+        This is the solution f_alphaor the alpha specie. The solution to the overall
         solar wind kinetic model is given by the solution to each specie separately.
         """
-        f_r = torch.autograd.grad(
-            f, r, create_graph=True
+        grad_f_alpha = torch.autograd.grad(
+            inputs = input,
+            outputs = f_alpha,
+            grad_outputs = torch.ones_like(f_alpha),
+            retain_graph=True,
+            create_graph=True
         )[0]
-        f_v = torch.autograd.grad(
-            f, v, create_graph=True
-        )[0]
-        f_t = torch.autograd.grad(
-            f, t, create_graph=True
-        )[0]
+
+        f_alpha_r, f_alpha_v, f_alpha_t = grad_f_alpha[:, :, :3], grad_f_alpha[:, :, 3:6], grad_f_alpha[:, :, -1] ## 3-d
+
         v_cross_B = torch.cross(v, B, dim=-1)
 
-        v_dot_f_r = torch.einsum("bsi,bsi->bs", v, f_r)
+        v_dot_f_alpha_r = torch.einsum("bsi,bsi->bs", v, f_alpha_r)
 
-        lorentz_m_dot_f_v = torch.einsum(
-            "bsi,bsi->bs", (e / proton_mass) * (E + v_cross_B), f_v
+        lorentz_m_dot_f_alpha_v = torch.einsum(
+            "bsi,bsi->bs", (q_alpha / m_alpha) * (E + v_cross_B), f_alpha_v
         )
 
-        return (f_t + v_dot_f_r + lorentz_m_dot_f_v) ** 2
+        return ((f_alpha_t + v_dot_f_alpha_r + lorentz_m_dot_f_alpha_v) ** 2).sum()
 
     def entropy(self, model: Callable) -> Tensor:
         return self.integral.integrate(
@@ -61,30 +67,117 @@ class StatisticalMechanicsInformedLoss(LighTorchLoss):
             6,
             10000,
             [
-                [0, torch.inf],
-                [0, torch.inf],
-                [0, torch.inf],
-                [0, torch.inf],
-                [0, torch.inf],
-                [0, torch.inf],
+                [10, 240],
+                [0, 1400],
+                [0, 7200],
             ]
         )
 
-    def maxwell(self, E_model: Tensor, B_model: Tensor) -> Tensor:
+    def maxwell(self, E: Tensor, B: Tensor, input: Tensor) -> Tensor:
+        Ex, Ey, Ez = E[:, :, 0], E[:, :, 1], E[:, :, 2]
+        Bx, By, Bz = B[:, :, 0], B[:, :, 1], B[:, :, 2]
+
+        grad_Ex = torch.autograd.grad(
+            inputs = input,
+            outputs = Ex,
+            grad_outputs = torch.ones_like(Ex),
+            retain_graph = True,
+            create_graph = True
+        )[0]
+
+        grad_Ey = torch.autograd.grad(
+            inputs = input,
+            outputs = Ey,
+            grad_outputs = torch.ones_like(Ey),
+            retain_graph = True,
+            create_graph = True
+        )[0]
+
+        grad_Ez = torch.autograd.grad(
+            inputs = input,
+            outputs = Ez,
+            grad_outputs = torch.ones_like(Ez),
+            retain_graph = True,
+            create_graph = True
+        )[0]
+
+        grad_Bx = torch.autograd.grad(
+            inputs = input,
+            outputs = Bx,
+            grad_outputs = torch.ones_like(Bx),
+            retain_graph = True,
+            create_graph = True
+        )[0]
+
+        grad_By = torch.autograd.grad(
+            inputs = input,
+            outputs = By,
+            grad_outputs = torch.ones_like(By),
+            retain_graph = True,
+            create_graph = True
+        )[0]
+
+        grad_Bz = torch.autograd.grad(
+            inputs = input,
+            outputs = Bz,
+            grad_outputs = torch.ones_like(Bz),
+            retain_graph = True,
+            create_graph = True
+        )[0]
+
+
+        ## Quasineutral Gauss-Ostrogradski-Poisson (electric field)
+        ## div(E) = 0
+        ## min_theta div(E(r, t; theta))^2
+        quasineutral_poisson = (grad_Ex[:, :, 0] + grad_Ey[:, :, 1] + grad_Ez[:, :, 2])**2
+
+        ## Gauss-Ostrogradski for (magnetic field)
+        magnetic_gauss = (grad_Bx[:, :, 0] + grad_By[:, :, 1] + grad_Bz[:, :, 2])**2
+
+        ## Faraday
+        nabla_cross_Ex = grad_Ez[:, :, 1] - grad_Ey[:, :, 2]
+        nabla_cross_Ey = grad_Ez[:, :, 0] - grad_Ex[:, :, 2]
+        nabla_cross_Ez = grad_Ey[:, :, 0] - grad_Ex[:, :, 1]
+
+        faraday_x = (nabla_cross_Ex + grad_Bx[:, :, 3])**2
+        faraday_y = (nabla_cross_Ey + grad_By[:, :, 3])**2
+        faraday_z = (nabla_cross_Ez + grad_Bz[:, :, 3])**2
+
+        faraday = faraday_x + faraday_y + faraday_z
+
+        ## Ampere
+        nabla_cross_Bx = grad_Bz[:, :, 1] - grad_By[:, :, 2]
+        nabla_cross_By = grad_Bz[:, :, 0] - grad_Bx[:, :, 2]
+        nabla_cross_Bz = grad_By[:, :, 0] - grad_Bx[:, :, 1]
+
+        ampere_x = (nabla_cross_Bx - mu_0 * (Jx + epsilon_0 * grad_Ex[:, :, 3]))**2
+        ampere_y = (nabla_cross_By - mu_0 * (Jy + epsilon_0 * grad_Ey[:, :, 3]))**2
+        ampere_z = (nabla_cross_Bz - mu_0 * (Jz + epsilon_0 * grad_Ez[:, :, 3]))**2
+
+        ampere = ampere_x + ampere_y + ampere_z
+
+        return quasineutral_poisson + magnetic_gauss + faraday + ampere
 
     def forward(self, **kwargs) -> Tuple[Tensor, ...]:
-        S = self.entropy(kwargs['model'])
+        ### Forward pass of models
+        E: Tensor = self.f_E(kwargs['input'])
+        B: Tensor = self.f_B(kwargs['input'])
+        f_e: Tensor = self.f_e(kwargs['input'], v, E, B, m_e, -e)
+        f_p: Tensor = self.f_p(kwargs['input'], v, E, B, m_p, e)
 
-        vlasov = self.vlasov(
-            kwargs["f"], kwargs["r"], kwargs["v"], kwargs["t"], kwargs["E"], kwargs["B"]
-        )
+        maxwell = self.maxwell(E, B, kwargs['input'])
 
+        vlasov = self.vlasov(f_e, kwargs['inputs'], v, E, B, m_e, -e) + self.vlasov(f_p, kwargs['input'], v, E, B, m_p, e)
+
+        S = self.entropy(self.f_e) + self.entropy(self.f_p)
         dS_dt = torch.autograd.grad(
-            S,
-            kwargs["t"],
+            inputs = kwargs['input'][:, -1],
+            outputs = S,
+            grad_outputs = torch.ones_like(S),
+            retain_graph = True,
             create_graph = True
         )[0] ** 2
 
-        final = self.factors["PDE"] * vlasov + self.factors["Liouville"] * dS_dt + quasyneutrality * self.factors["Quasyneutrality"] + maxwell * self.factors["Maxwell"]
+        final = self.factors["PDE"] * vlasov + self.factors["Liouville"] * dS_dt + maxwell * self.factors["Maxwell"]
 
-        return final, vlasov, dS_dt
+        return final, vlasov, dS_dt, maxwell
