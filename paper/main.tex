@@ -181,7 +181,7 @@ The current work utilizes data from L1-Lagrange readings; accordingly, the phase
 
 \begin{align*}
     r_x &\in \left[0, 230R_E\right] \\
-    v_x &\in \left[0, 1000\right]\frac{km}{s} \\
+    v_x &\in \left[0, 1200\right]\frac{km}{s} \\
     t &\in \left[0, 7200]s \\
 \end{align*}
 
@@ -190,12 +190,9 @@ For the kinetic and electormagnetic model, we define the following Dirichlet bou
 \begin{align*}
     f_\alpha\left(r, v_{max}, t) &= 0 \\
     f_\alpha\left(r, v_{min}, t) &= 0 \\
-    f_v\left(r_{min}, t) &= \mathbf{v}_{L1}(t) \\
-    f_v\left(r_{max}, t) &= \mathbf{v}_{Earth}(t) \\
-    f_E\left(r_{min}, t\right) &= E_{L1}(t) \\
-    f_E\left(r_{max}, t\right) &= E_{Earth}(t) \\
-    f_B\left(r_{min}, t\right) &= B_{L1}(t) \\
-    f_B\left(r_{max}, t\right) &= B_{Earth}(t)
+    f_\alpha\left(r, v, t_0) &= 0 \\
+    f_E\left(r_0, t\right) &= E_{L1}(t) \\
+    f_B\left(r_0, t\right) &= B_{L1}(t) \\
 \end{align*}
 
 \section{Physics Informed Machine Learning}
@@ -233,7 +230,9 @@ The WIND spacecraft, launched in 1994, is part of the Global Geospace Science in
 
 \subsection{2D-Simulations}
 
-\section{Conclusion}
+\subsection{3D-Simulations}
+
+\section{Conclusion and future work}
 This work demonstrated the effectiveness of Physics-Informed Neural Networks to model Solar Wind's behavior tied to diverse statistical mechanics formulations that lead to Vlasov's kinetic model. By embedding the governing physical equations directly into the loss function, we can efficiently train a neural network to approximate the solution of this complex, non-linear system.
 
 Future work will focus on improving the architecture design with Physics informed Neural Operators (PINOs) \cite{li2023physicsinformedneuraloperatorlearning} by embedding Maxwell's equations for data continuization through differentiable splines, the satellite data dependance inhibits the introduction os such powerful frameworks in this case.

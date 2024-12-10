@@ -18,4 +18,5 @@
 \contentsline {section}{\numberline {6}Results and discussion}{12}{section.6}%
 \contentsline {subsection}{\numberline {6.1}1D-Simulations}{12}{subsection.6.1}%
 \contentsline {subsection}{\numberline {6.2}2D-Simulations}{12}{subsection.6.2}%
-\contentsline {section}{\numberline {7}Conclusion}{12}{section.7}%
+\contentsline {subsection}{\numberline {6.3}3D-Simulations}{12}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Conclusion and future work}{12}{section.7}%
