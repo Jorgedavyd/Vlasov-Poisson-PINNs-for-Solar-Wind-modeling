@@ -15,7 +15,7 @@
 \maketitle
 
 \begin{abstract}
-    %TODO
+    Solar wind modeling presents significant challenges due to its complex, quasi-neutral, and collisionless plasma dynamics. Traditional magnetohydrodynamic (MHD) models often fail to accurately capture the system's intricate behavior. This research proposes a novel approach using Statistical Mechanics Informed Neural Networks to develop a more nuanced kinetic description of solar wind phenomena. By integrating Vlasov-Maxwell equations with physics-informed neural network architectures, we develop a computational framework that overcomes limitations of existing analytical and numerical models. The proposed methodology leverages data from space observatories including DSCOVR, ACE, and WIND, establishing boundary conditions from the L1-Lagrange point to Earth's orbit. Our approach directly embeds physical constraints into the neural network's learning process, enabling a more interpretable and computationally efficient model. The research demonstrates how physics-informed machine learning can provide insights into the complex dynamics of solar wind, moving beyond traditional temperature distributions and computational constraints.By combining statistical mechanics, kinetic theory, and advanced machine learning techniques, this work offers a promising new paradigm for understanding and predicting solar wind behavior, with potential implications for space weather prediction and fundamental plasma physics research.
 \end{abstract}
 
 \tableofcontents
@@ -166,7 +166,6 @@ For this sake, we employ a Statistical mechanics informed Vlasov-Maxwell model t
 \nabla \cdot f_E &= 0 \text{ (Quasineutrality)}\\
 \nabla \cdot f_B &= 0 \\
 \nabla \times f_E &= - \frac{\partial f_B}{\partial t} \\
-\nabla \times f_B &= \mu_0 \left(J + \epsilon_0 \frac{\partial f_E}{\partial t}\right) \\
 \end{align*}
 
 $f_\alpha$ is the kinetic description of each specie, $f_E$ is the electric field descriptor, $f_B$ is the magnetic field descriptor, $f_v$ is the velocity descriptor, $J$ is the current density (derived from $f_\alpha$), and $\rho_\alpha$ is the charge density (derived from $f_\alpha$).
@@ -181,8 +180,8 @@ This structure provides an optimization process overtly relying on PDE residuals
 The current work utilizes data from L1-Lagrange readings; accordingly, the phase space is constrained to fit predictions up to the Earth's position. As so, we define our parameter space:
 
 \begin{align*}
-    r &\in \left[10R_E, 240R_E\right] \\
-    v_x &\in \left[300, 1000\right]\frac{km}{s} \\
+    r_x &\in \left[0, 230R_E\right] \\
+    v_x &\in \left[0, 1000\right]\frac{km}{s} \\
     t &\in \left[0, 7200]s \\
 \end{align*}
 
@@ -228,14 +227,11 @@ ACE, launched in 1997, provides continuous measurements of the solar wind and in
 \subsection{WIND}
 The WIND spacecraft, launched in 1994, is part of the Global Geospace Science initiative. It provides comprehensive measurements of the solar wind, magnetic fields, and energetic particles. WIND's data is essential for understanding the fundamental processes of the solar wind and its interaction with the Earth's magnetosphere.
 
-\section{Methods}
+\section{Results and discussion}
 
-\subsection{Neural Architecture Search (NAS)}
-As an intermediate step before training, a hyperparameter grid search algorithm based in Bayesian multi-objective optimization is employed to find the neural architecture. The Pareto front is plotted, selecting minimization of neural complexity and loss function.
+\subsection{1D-Simulations}
 
-\section{Results}
-
-\section{Discussion}
+\subsection{2D-Simulations}
 
 \section{Conclusion}
 This work demonstrated the effectiveness of Physics-Informed Neural Networks to model Solar Wind's behavior tied to diverse statistical mechanics formulations that lead to Vlasov's kinetic model. By embedding the governing physical equations directly into the loss function, we can efficiently train a neural network to approximate the solution of this complex, non-linear system.

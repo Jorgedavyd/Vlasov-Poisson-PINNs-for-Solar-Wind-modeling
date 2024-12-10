@@ -15,8 +15,7 @@
 \contentsline {subsection}{\numberline {5.1}DSCOVR: Deep Space Climate Observatory}{11}{subsection.5.1}%
 \contentsline {subsection}{\numberline {5.2}ACE: Advanced Composition Explorer}{11}{subsection.5.2}%
 \contentsline {subsection}{\numberline {5.3}WIND}{12}{subsection.5.3}%
-\contentsline {section}{\numberline {6}Methods}{12}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Neural Architecture Search (NAS)}{12}{subsection.6.1}%
-\contentsline {section}{\numberline {7}Results}{12}{section.7}%
-\contentsline {section}{\numberline {8}Discussion}{12}{section.8}%
-\contentsline {section}{\numberline {9}Conclusion}{12}{section.9}%
+\contentsline {section}{\numberline {6}Results and discussion}{12}{section.6}%
+\contentsline {subsection}{\numberline {6.1}1D-Simulations}{12}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}2D-Simulations}{12}{subsection.6.2}%
+\contentsline {section}{\numberline {7}Conclusion}{12}{section.7}%
