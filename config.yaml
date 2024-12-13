@@ -1,18 +1,47 @@
-trainer:
-  logger: true
-  enable_checkpointing: true
-  max_epochs: 2000
-  accelerator: cuda
-  devices:  1
-  precision: 32
+defaults:
+  - modulus_default
+  - scheduler: tf_exponential_lr
+  - optimizer: adam
+  - loss: sum
+  - _self_
 
-model:
-  class_path: model.Model
-  dict_kwargs:
+dimensions: 2
 
-data:
-  class_path: data.DataModule
-  init_args:
-    batch_size: 32
-    num_workers: 8
-    pin_memory: true
+scheduler:
+  decay_rate: 0.95
+  decay_steps: 4000
+
+neural_network:
+  f_e:
+    activations: []
+    hidden_layers: []
+  f_p:
+    activations: []
+    hidden_layers: []
+  f_E:
+    activations: []
+    hidden_layers: []
+  f_B:
+    activations: []
+    hidden_layers: []
+
+fno:
+  f_e:
+  f_p:
+  f_E:
+  f_B:
+
+training:
+  rec_validation_freq: 1000
+  rec_inference_freq: 2000
+  rec_monitor_freq: 1000
+  rec_constraint_freq: 2000
+  max_steps: 10000
+
+batch_size:
+  TopWall: 1000
+  NoSlip: 1000
+  Interior: 4000
+
+graph:
+  func_arch: true

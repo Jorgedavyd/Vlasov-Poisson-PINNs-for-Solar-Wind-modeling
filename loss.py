@@ -31,6 +31,7 @@ class StatisticalMechanicsInformedLoss(LighTorchLoss):
                 "Maxwell": alpha_3,
             },
         )
+
         self.integral = MonteCarlo()
         self.f_E = f_E
         self.f_B = f_B
@@ -60,6 +61,7 @@ class StatisticalMechanicsInformedLoss(LighTorchLoss):
         This is the solution f_alphaor the alpha specie. The solution to the overall
         solar wind kinetic model is given by the solution to each specie separately.
         """
+
         grad_f_alpha = torch.autograd.grad(
             inputs=input,
             outputs=f_alpha,
@@ -196,10 +198,12 @@ class StatisticalMechanicsInformedLoss(LighTorchLoss):
             ** 2
         )
         bc = self.boundary(*kwargs["bc"])
+
         final = (
             self.factors["Vlasov"] * vlasov
             + self.factors["Liouville"] * dS_dt
             + maxwell * self.factors["Maxwell"]
             + self.factors["BC"] * bc
         )
+
         return final, vlasov, dS_dt, maxwell
