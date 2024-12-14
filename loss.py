@@ -1,11 +1,40 @@
 from lightorch.nn.criterions import LighTorchLoss
 from torch import Tensor
-from typing import Callable, Tuple
+from typing import Callable, Tuple, Dict
 from scipy.constants import e, m_e, m_p
 import torch
 from torchquad import MonteCarlo, set_up_backend
+from modulus.loss import Loss
 
 set_up_backend("torch", data_type="float32")
+
+class LiouvilleLoss(Loss):
+    def __init__(self, cfg: ModulusConfig) -> None:
+        super().__init__()
+        self.integral_method = MonteCarlo()
+        self.dimensionality: int = cfg.dimensions * 2 + 1
+        self.sampling = cfg.sampling_monte_carlo
+        self.bounds = cfg.bounds
+
+    def forward(self, f_alpha: Callable) -> Dict[str, Tensor]:
+        entropy = self.integral.integrate(
+            lambda *args: f_alpha(*args) * torch.log(f_alpha(*args)),
+            self.dimensionality,
+            self.sampling,
+            [
+                *self.bounds.r,
+                *self.bounds.v,
+                self.bounds.t
+            ],
+        )
+
+        dS_dt = torch.autograd.grad(
+            inputs = t,
+            outputs = entropy,
+            grad_outputs = torch.ones_like(entropy),
+        )[0]
+
+        return {"Liouville": dS_dt}
 
 
 class StatisticalMechanicsInformedLoss(LighTorchLoss):

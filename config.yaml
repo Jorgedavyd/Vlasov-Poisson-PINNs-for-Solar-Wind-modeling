@@ -5,7 +5,22 @@ defaults:
   - loss: sum
   - _self_
 
-dimensions: 2
+bounds:
+  r:
+    - [0, 1]
+    - [0, 1]
+    - [0, 1]
+  v:
+    - [0, 1]
+    - [0, 1]
+    - [0, 1]
+  t:
+    - [0, 1]
+    - [0, 1]
+    - [0, 1]
+
+geometry:
+  grid_resolution: 1000
 
 scheduler:
   decay_rate: 0.95
@@ -13,17 +28,17 @@ scheduler:
 
 neural_network:
   f_e:
-    activations: []
-    hidden_layers: []
+    activations: [GeLU, GeLU, GeLU, GeLU, GeLU, Sigmoid]
+    hidden_layers: [16, 32, 64, 32, 10, 1]
   f_p:
-    activations: []
-    hidden_layers: []
+    activations: [GeLU, GeLU, GeLU, GeLU, GeLU, Sigmoid]
+    hidden_layers: [16, 32, 64, 32, 10, 1]
   f_E:
-    activations: []
-    hidden_layers: []
+    activations: [GeLU, GeLU, GeLU, GeLU, GeLU, null]
+    hidden_layers: [16, 32, 64, 32, 10, 1]
   f_B:
-    activations: []
-    hidden_layers: []
+    activations: [GeLU, GeLU, GeLU, GeLU, GeLU, null]
+    hidden_layers: [16, 32, 64, 32, 10, 1]
 
 fno:
   f_e:

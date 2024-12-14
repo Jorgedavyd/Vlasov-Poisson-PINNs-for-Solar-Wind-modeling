@@ -19,21 +19,19 @@ from modulus.geometry.primitives_1d import Point1D, Line1D
 from modulus.utils.io.vtk import var_to_polyvtk
 
 
-def make_geometry():
-    return ...
-
+def make_geometry(cfg: ModulusConfig):
+    nr_points: int = cfg.geometry.grid_resolution
+    ball = Sphere(center = (0, 0, 0), radius = cfg.geometry.max_length)
+    s = ball.sample_boundary(nr_points = nr_points)
+    var_to_polyvtk(s, "general_geometry")
+    return s
 
 @modulus.main(version_base="1.3", config_path="conf", config_name="config")
 def run(cfg: ModulusConfig) -> None:
-    x, y, z = Symbol("x"), Symbol("y"), Symbol("z")
-    t = Symbol("t")
-    input = dict(x=x, y=y, z=z, t=t)
-    v_x, v_y, v_z = Symbol("v_x"), Symbol("v_y"), Symbol("v_z")
-
-    eq = VlasovMaxwell()
+    eq = VlasovMaxwell(cfg)
     full_model = NeuralNetwork(cfg)
     nodes = eq.make_nodes() + [full_model.make_node(name="neural_network")]
-    geo = make_geometry()
+    geo = make_geometry(cfg)
     domain = Domain()
 
     ## define L1 boundaries
@@ -53,20 +51,14 @@ def run(cfg: ModulusConfig) -> None:
             faraday_z=0,
             vlasov_proton=0,
             vlasov_electron=0,
+            liouville = 0,
+            energy = 0,
         ),
         batch_size=100,
-        bounds=dict(r=(0, 210), t=(0, 7200)),
+        bounds=dict(r=cfg.bounds.r, t=cfg.bounds.t),
     )
 
-    integral = IntegralBoundaryConstraint(
-        nodes=nodes,
-        geometry=geo,
-        outvar={"VlasovMaxwell": 0},
-        batch_size=1,
-        integral_batch_size=1000,
-    )  ## monte carlo integration for this one
-
-    domain.add_constraint(integral, "dirichlet")
+    domain.add_constraint(boundary, "dirichlet")
     domain.add_constraint(residual, "residual")
 
     slv = Solver(cfg, domain)
