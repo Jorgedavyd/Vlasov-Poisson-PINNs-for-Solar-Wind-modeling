@@ -151,6 +151,14 @@ To complete the description of the solar wind, the Maxwell's electrodynamic form
     \nabla \times B &= \mu_0 \left(J + \epsilon_0 \frac{\partial E}{\partial t}\right)
 \end{align*}
 
+\subsection{Conservation of energy}
+Another important property can be provided by conservation of energy in solar wind. In this case, we want to account for the bulk motion of the particles; the interaction energy, this is the work of the fields; and the conservation of the pointing vector $S$ describing the energy transport throughout space and time.
+
+\begin{align*}
+    \frac{\partial}{\partial t} \left( \frac{1}{2} m_\alpha f_v^2 + m_\alpha q_\alpha f_E \cdot f_v\right) + \nabla \cdot \textbf{S} = 0
+\end{align*}
+
+
 \subsection{Complete dynamical system}
 For some general universal approximator $f_n$, also interpreted as dynamical descriptor in this context, there is a parameter space $\theta_n$ tied to the governing constraints ($g_i$) for its respective phenomena:
 
@@ -166,6 +174,7 @@ For this sake, we employ a Statistical mechanics informed Vlasov-Maxwell model t
 \nabla \cdot f_E &= 0 \text{ (Quasineutrality)}\\
 \nabla \cdot f_B &= 0 \\
 \nabla \times f_E &= - \frac{\partial f_B}{\partial t} \\
+\frac{\partial}{\partial t} \left( \frac{1}{2} m_\alpha f_v^2 + m_\alpha q_\alpha f_E \cdot f_v \right) &+ \nabla \cdot \textbf{S} = 0 \text{ (Conservation)} \\
 \end{align*}
 
 $f_\alpha$ is the kinetic description of each specie, $f_E$ is the electric field descriptor, $f_B$ is the magnetic field descriptor, $f_v$ is the velocity descriptor, $J$ is the current density (derived from $f_\alpha$), and $\rho_\alpha$ is the charge density (derived from $f_\alpha$).
@@ -236,6 +245,9 @@ The WIND spacecraft, launched in 1994, is part of the Global Geospace Science in
 This work demonstrated the effectiveness of Physics-Informed Neural Networks to model Solar Wind's behavior tied to diverse statistical mechanics formulations that lead to Vlasov's kinetic model. By embedding the governing physical equations directly into the loss function, we can efficiently train a neural network to approximate the solution of this complex, non-linear system.
 
 Future work will focus on improving the architecture design with Physics informed Neural Operators (PINOs) \cite{li2023physicsinformedneuraloperatorlearning} by embedding Maxwell's equations for data continuization through differentiable splines, the satellite data dependance inhibits the introduction os such powerful frameworks in this case.
+
+\section{Appendix}
+
 
 \bibliographystyle{plain}
 
