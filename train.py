@@ -27,12 +27,9 @@ def make_geometry(cfg: ModulusConfig):
     return s
 
 def define_constraints(cfg, nodes):
-    t = Symbol("t")
+    x, y, z, t = Symbol("x"), Symbol("y"), Symbol("z"), Symbol("t")
     input: Dict[str, Symbol] = dict(
-        x = Symbol("x"),
-        y = Symbol("y"),
-        z = Symbol("z"),
-        t = t
+        x = x, y = y, z = z, t = t
     )
     ## Velocity field
     V_x = Function("V_x")(*input)
