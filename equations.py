@@ -1,4 +1,5 @@
 from sympy import Symbol, Function, log
+from modulus.hydra import ModulusConfig
 from scipy.constants import e, m_p, m_e, mu_0
 from modulus.eq.pdes import PDE
 from itertools import chain
