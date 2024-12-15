@@ -6,7 +6,7 @@
 \usepackage{hyperref}
 \usepackage{cite}
 
-\title{Statistical Mechanics Informed Neural Networks for Solar Wind modeling}
+\title{Vlasov-Maxwell-Liouville informed Neural Networks for Solar Wind Modeling}
 \author{Jorge D. Enciso}
 \date{\today}
 
@@ -209,6 +209,12 @@ Usually, solely data-driven methods require huge volumes of high-quality data wi
 
 These models were created as numerical methods for solving Partial Differential Equations that embed physical modeling. It further extended to all fields that required PDE solving as a computationally efficient numerical alternative to other solvers.
 
+\subsection{Physics informed Neural Networks}
+
+\subsection{Physics informed Neural Operators}
+
+\subsubsection{Fourier Neural Operator}
+
 \subsection{Approximating the density function with PINNs}
 The most recent research, using PINNs, develop a way to not just learn functions, but to learn functional operators: Lagrangian, Hamiltonian, etc. \cite{cranmer2020lagrangianneuralnetworks, greydanus2019hamiltonianneuralnetworks} The first research creates a neural network that takes the general coordinates $q$ and $\dot q$ as input, to provide the lagrangian as an output, taking advantage of the auto-differentiation capabilities of modern machine learning frameworks to enforce the euler-lagrange equation with gradient-descent methods:
 
@@ -235,11 +241,9 @@ The WIND spacecraft, launched in 1994, is part of the Global Geospace Science in
 
 \section{Results and discussion}
 
-\subsection{1D-Simulations}
+\subsection{Neural Network 3D-Simulations}
 
-\subsection{2D-Simulations}
-
-\subsection{3D-Simulations}
+\subsection{Fourier Neural Operator 3D-Simulations}
 
 \section{Conclusion and future work}
 This work demonstrated the effectiveness of Physics-Informed Neural Networks to model Solar Wind's behavior tied to diverse statistical mechanics formulations that lead to Vlasov's kinetic model. By embedding the governing physical equations directly into the loss function, we can efficiently train a neural network to approximate the solution of this complex, non-linear system.
@@ -247,7 +251,6 @@ This work demonstrated the effectiveness of Physics-Informed Neural Networks to 
 Future work will focus on improving the architecture design with Physics informed Neural Operators (PINOs) \cite{li2023physicsinformedneuraloperatorlearning} by embedding Maxwell's equations for data continuization through differentiable splines, the satellite data dependance inhibits the introduction os such powerful frameworks in this case.
 
 \section{Appendix}
-
 
 \bibliographystyle{plain}
 

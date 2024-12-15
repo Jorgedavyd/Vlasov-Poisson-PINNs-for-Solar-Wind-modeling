@@ -1,22 +1,22 @@
-from sympy import Symbol
+from modulus.sym.hydra import ModulusConfig
+from modulus.sym.solver import Solver
+from modulus.sym.domain import Domain
+from sympy import Symbol, Function
 from argparse import ArgumentParser
+from typing import Dict
+from torch.utils.data import Dataset
+from dataset import L1Dataset
 import modulus
-from modulus.hydra import ModulusConfig
-from modulus.solver import Solver
-from modulus.domain import Domain
-from modulus.domain.constraint import (
+from modulus.sym.domain.constraint import (
     PointwiseBoundaryConstraint,
     PointwiseInteriorConstraint,
-    IntegralBoundaryConstraint,
+    SupervisedGridConstraint
 )
-from model import NeuralNetwork
 from equations import VlasovMaxwell
+from model import NeuralNetwork
 
-from modulus.geometry.parametrization import Parametrization, Parameter
-from modulus.geometry.primitives_3d import Box, Sphere, Cylinder, Plane
-from modulus.geometry.primitives_2d import Rectangle, Circle, Line
-from modulus.geometry.primitives_1d import Point1D, Line1D
-from modulus.utils.io.vtk import var_to_polyvtk
+from modulus.sym.geometry.primitives_3d import Sphere
+from modulus.sym.utils.io.vtk import var_to_polyvtk
 
 
 def make_geometry(cfg: ModulusConfig):
@@ -27,16 +27,59 @@ def make_geometry(cfg: ModulusConfig):
     return s
 
 def define_constraints(cfg, nodes):
+    t = Symbol("t")
+    input: Dict[str, Symbol] = dict(
+        x = Symbol("x"),
+        y = Symbol("y"),
+        z = Symbol("z"),
+        t = t
+    )
+    ## Velocity field
+    V_x = Function("V_x")(*input)
+    V_y = Function("V_y")(*input)
+    V_z = Function("V_z")(*input)
     geo = make_geometry(cfg)
     domain = Domain()
+    path: str = "/data/Vlasov/curated.csv"
+    train_dataset: Dataset = L1Dataset(path, [
+        "B_x", "B_y", "B_z",
+        "E_x", "E_y", "E_z",
+        "V_x", "V_y", "V_z",
+    ])
 
     ## define L1 boundaries
-    boundary_1 = PointwiseBoundaryConstraint(
-        nodes=nodes, geometry=geo, outvar={"E": 0}, batch_size=cfg.batch_size.boundary_1
+    boundary_1 = SupervisedGridConstraint(
+        nodes=nodes, geometry=geo, dataset = train_dataset,
+        batch_size = cfg.batch_size.boundary1,
+        parametrization = {t:0}
     )
-    ## define other dirichlet
+
+    ## define initial conditions for the f_e and f_p
     boundary_2 = PointwiseBoundaryConstraint(
-        nodes=nodes, geometry=geo, outvar={"E": 0}, batch_size=cfg.batch_size.boundary_1
+        nodes = nodes, geometry = geo,
+        outvar = dict(f_e = 0., f_p = 0.), ## setup initial coniditons
+        parametrization = {t:0}
+    )
+
+    # velocity extreme cases
+    vx_boundary = PointwiseBoundaryConstraint(
+        nodes = nodes, geometry = geo,
+        outvar = dict(f_e = 0., f_p = 0.),
+        parametrization = {V_x: cfg.bounds[0]}
+    )
+
+    # velocity extreme cases
+    vy_boundary = PointwiseBoundaryConstraint(
+        nodes = nodes, geometry = geo,
+        outvar = dict(f_e = 0., f_p = 0.),
+        parametrization = {V_y: cfg.bounds[1]}
+    )
+
+    # velocity extreme cases
+    vz_boundary = PointwiseBoundaryConstraint(
+        nodes = nodes, geometry = geo,
+        outvar = dict(f_e = 0., f_p = 0.),
+        parametrization = {V_z: cfg.bounds[1]}
     )
 
     ## residual criteria
@@ -55,15 +98,19 @@ def define_constraints(cfg, nodes):
             energy = 0,
         ),
         batch_size=cfg.batch_size.pde,
-        bounds=dict(r=cfg.bounds.r, t=cfg.bounds.t),
+        bounds=dict(r=cfg.bounds.r, v=cfg.bounds.v, t=cfg.bounds.t),
     )
 
     domain.add_constraint(boundary_1, "dirichlet_1")
     domain.add_constraint(boundary_2, "dirichlet_2")
+    domain.add_constraint(vx_boundary, "vx_boundary")
+    domain.add_constraint(vy_boundary, "vy_boundary")
+    domain.add_constraint(vz_boundary, "vz_boundary")
     domain.add_constraint(residual, "residual")
+
     return domain
 
-@modulus.main(version_base="1.3", config_path="conf", config_name="config")
+@modulus.sym.main(version_base="1.3", config_path="conf", config_name="config")
 def train_nn(cfg: ModulusConfig) -> None:
     eq = VlasovMaxwell(cfg)
     full_model = NeuralNetwork(cfg)

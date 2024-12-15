@@ -39,9 +39,17 @@ neural_network:
 
 fno:
   f_e:
+    in_channels: 3
+    out_channels: 3
   f_p:
+    in_channels: 3
+    out_channels: 3
   f_E:
+    in_channels: 4
+    out_channels: 3
   f_B:
+    in_channels: 3
+    out_channels: 3
 
 training:
   rec_validation_freq: 1000
