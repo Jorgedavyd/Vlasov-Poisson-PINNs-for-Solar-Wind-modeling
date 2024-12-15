@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from typing import Dict
 from torch.utils.data import Dataset
 from dataset import L1Dataset
-import modulus
+import modulus.sym
 from modulus.sym.domain.constraint import (
     PointwiseBoundaryConstraint,
     PointwiseInteriorConstraint,
@@ -17,7 +17,6 @@ from model import NeuralNetwork
 
 from modulus.sym.geometry.primitives_3d import Sphere
 from modulus.sym.utils.io.vtk import var_to_polyvtk
-
 
 def make_geometry(cfg: ModulusConfig):
     nr_points: int = cfg.geometry.grid_resolution
@@ -116,8 +115,7 @@ def train_nn(cfg: ModulusConfig) -> None:
     slv = Solver(cfg, domain)
     slv.solve()
 
-
-@modulus.main(version_base="1.3", config_path="conf", config_name="config")
+@modulus.sym.main(version_base="1.3", config_path="conf", config_name="config")
 def train_fno(cfg: ModulusConfig) -> None:
     eq = VlasovMaxwell(cfg)
     full_model = NeuralNetwork(cfg) ## define fno
@@ -125,7 +123,6 @@ def train_fno(cfg: ModulusConfig) -> None:
     domain = define_constraints(cfg, nodes)
     slv = Solver(cfg, domain)
     slv.solve()
-
 
 if __name__ == "__main__":
     parser = ArgumentParser(prog = "VlasovMaxwell-PINN", description = "Statistical mechanics informed Neural Network training for solar wind modeling")

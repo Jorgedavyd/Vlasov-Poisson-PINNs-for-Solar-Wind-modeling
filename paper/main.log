@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.11.9)  15 DEC 2024 08:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.11.9)  15 DEC 2024 14:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -300,11 +300,11 @@ Overfull \hbox (3.82271pt too wide) in paragraph at lines 64--64
 
 LaTeX Warning: Citation `johnson2022physics' on page 5 undefined on input line 75.
 
-[5] [6]
-./main.tex:135: Undefined control sequence.
+[5] [6] [7] [8]
+./main.tex:165: Undefined control sequence.
 <recently read> \f 
                    
-l.135 where $\f
+l.165 where $\f
                _\alpha \log f_\alpha$ represents the local entropy density i...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -312,11 +312,11 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-[7] [8] [9]
-./main.tex:195: Extra }, or forgotten \right.
+[9] [10]
+./main.tex:224: Extra }, or forgotten \right.
 <template> }
             $}\ifmeasuring@ \savefieldlength@ \fi \set@field \hfil \endtempl...
-l.195 \end{align*}
+l.224 \end{align*}
                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -324,10 +324,10 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./main.tex:195: Missing \right. inserted.
+./main.tex:224: Missing \right. inserted.
 <inserted text> 
                 \right .
-l.195 \end{align*}
+l.224 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -335,10 +335,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:195: Missing } inserted.
+./main.tex:224: Missing } inserted.
 <inserted text> 
                 }
-l.195 \end{align*}
+l.224 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -346,10 +346,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:195: Extra }, or forgotten \right.
+./main.tex:224: Extra }, or forgotten \right.
 <template> }
             $}\ifmeasuring@ \savefieldlength@ \fi \set@field \hfil \endtempl...
-l.195 \end{align*}
+l.224 \end{align*}
                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -357,10 +357,10 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./main.tex:195: Missing \right. inserted.
+./main.tex:224: Missing \right. inserted.
 <inserted text> 
                 \right .
-l.195 \end{align*}
+l.224 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -368,10 +368,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:195: Missing } inserted.
+./main.tex:224: Missing } inserted.
 <inserted text> 
                 }
-l.195 \end{align*}
+l.224 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -379,10 +379,11 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Extra }, or forgotten \right.
+[11]
+./main.tex:234: Extra }, or forgotten \right.
 <template> }
             $}\ifmeasuring@ \savefieldlength@ \fi \set@field \endtemplate 
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -390,10 +391,10 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./main.tex:205: Missing \right. inserted.
+./main.tex:234: Missing \right. inserted.
 <inserted text> 
                 \right .
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -401,10 +402,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Missing } inserted.
+./main.tex:234: Missing } inserted.
 <inserted text> 
                 }
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -412,10 +413,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Extra }, or forgotten \right.
+./main.tex:234: Extra }, or forgotten \right.
 <template> }
             $}\ifmeasuring@ \savefieldlength@ \fi \set@field \endtemplate 
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -423,10 +424,10 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./main.tex:205: Missing \right. inserted.
+./main.tex:234: Missing \right. inserted.
 <inserted text> 
                 \right .
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -434,10 +435,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Missing } inserted.
+./main.tex:234: Missing } inserted.
 <inserted text> 
                 }
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -445,10 +446,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Extra }, or forgotten \right.
+./main.tex:234: Extra }, or forgotten \right.
 <template> }
             $}\ifmeasuring@ \savefieldlength@ \fi \set@field \endtemplate 
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -456,10 +457,10 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./main.tex:205: Missing \right. inserted.
+./main.tex:234: Missing \right. inserted.
 <inserted text> 
                 \right .
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -467,10 +468,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Missing } inserted.
+./main.tex:234: Missing } inserted.
 <inserted text> 
                 }
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -478,10 +479,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Extra }, or forgotten \right.
+./main.tex:234: Extra }, or forgotten \right.
 <template> }
             $}\ifmeasuring@ \savefieldlength@ \fi \set@field \endtemplate 
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -489,10 +490,10 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./main.tex:205: Missing \right. inserted.
+./main.tex:234: Missing \right. inserted.
 <inserted text> 
                 \right .
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -500,10 +501,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Missing } inserted.
+./main.tex:234: Missing } inserted.
 <inserted text> 
                 }
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -511,10 +512,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Extra }, or forgotten \right.
+./main.tex:234: Extra }, or forgotten \right.
 <template> }
             $}\ifmeasuring@ \savefieldlength@ \fi \set@field \endtemplate 
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -522,10 +523,10 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./main.tex:205: Missing \right. inserted.
+./main.tex:234: Missing \right. inserted.
 <inserted text> 
                 \right .
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -533,10 +534,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Missing } inserted.
+./main.tex:234: Missing } inserted.
 <inserted text> 
                 }
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -544,10 +545,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Extra }, or forgotten \right.
+./main.tex:234: Extra }, or forgotten \right.
 <template> }
             $}\ifmeasuring@ \savefieldlength@ \fi \set@field \endtemplate 
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -555,10 +556,10 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./main.tex:205: Missing \right. inserted.
+./main.tex:234: Missing \right. inserted.
 <inserted text> 
                 \right .
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -566,10 +567,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./main.tex:205: Missing } inserted.
+./main.tex:234: Missing } inserted.
 <inserted text> 
                 }
-l.205 \end{align*}
+l.234 \end{align*}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -577,7 +578,7 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-[10] [11] [12] (./main.bbl [13] [14]) [15] (./main.aux)
+(./main.bbl [12] [13]) [14] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -586,31 +587,22 @@ L3 programming layer <2024-02-20>
 
 LaTeX Warning: There were undefined references.
 
-
-Package rerunfilecheck Warning: File `main.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `main.out':
-(rerunfilecheck)             Before: 2D802991D10DEF258A7479A05D4C84E6;5518
-(rerunfilecheck)             After:  CD771B8371FCA33B4614F454411AF8C8;5600.
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: C67E23752B80F5E6733B485EEA360557;4737.
  ) 
 Here is how much of TeX's memory you used:
- 9373 strings out of 476076
- 142493 string characters out of 5793775
+ 9360 strings out of 476076
+ 142326 string characters out of 5793775
  1936187 words of memory out of 5000000
- 31289 multiletter control sequences out of 15000+600000
+ 31283 multiletter control sequences out of 15000+600000
  568408 words of font info for 75 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,10n,79p,1464b,560s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-pdfTeX warning (dest): name{subsection.6.3} has been referenced but does not exist, replaced by a fixed one
-
+ 75i,10n,79p,1464b,561s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on main.pdf (15 pages, 209408 bytes).
+Output written on main.pdf (14 pages, 207503 bytes).
 PDF statistics:
- 355 PDF objects out of 1000 (max. 8388607)
- 308 compressed objects within 4 object streams
- 81 named destinations out of 1000 (max. 500000)
- 217 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 316 PDF objects out of 1000 (max. 8388607)
+ 271 compressed objects within 3 object streams
+ 74 named destinations out of 1000 (max. 500000)
+ 169 words of extra memory for PDF output out of 10000 (max. 10000000)
 

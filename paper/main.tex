@@ -6,7 +6,7 @@
 \usepackage{hyperref}
 \usepackage{cite}
 
-\title{Vlasov-Maxwell-Liouville informed Neural Networks for Solar Wind Modeling}
+\title{Vlasov-Maxwell-Liouville informed Operator Learning for Solar Wind Modeling}
 \author{Jorge D. Enciso}
 \date{\today}
 
@@ -74,6 +74,36 @@ They use the VOICE code to numerically solve the Vlasov-Poisson system of equati
 
 This research \cite{johnson2022physics} is regarded as one of the first physics informed approaches towards geoeffective solar wind prediction. It uses L1-Lagrange spacecraft readings and enforces the Ohm's Law for an ideal plasma, following the Ideal MHD model for space plasma. It uses a wide variety of model architectures (GRU, LSTM, 2D CNN ResNets, etc.) to test their effectiveness under this task.
 
+\section{Physics Informed Machine Learning}
+Usually, solely data-driven methods require huge volumes of high-quality data with black box algorithms that prevent interpretability, a key factor for physical modeling. The most recent research advocate for physical informed virtual loss function terms \cite{}, leading off to the vastly known field of Physics Informed Neural Networks.
+
+These models were intended to be numerical solvers for Partial Differential Equations that embed physical constraints in the loss function. It further extended to all fields that required PDE solving as a computationally efficient alternative to other solvers.
+
+\subsection{Physics informed Neural Networks}
+The representational power of the neural network enables learning complex non-linear functions in a given linear space. This representational power, coupled with suitable constraints, can lead to the major description of unknown phenomena. In the case of Physics informed Machine Learning, we can define a self-supervised learning procedure (governing equations), and some initial conditions, such that:
+
+\begin{align*}
+    \mathcal{L}_{total} = \mathcal{L}_{PDE} + \mathcal{L}_{Boundary}
+\end{align*}
+
+This setup lays down the foundations of Physics informed Machine Learning, where instead of relying on data-driven supervised learning, we embed governing partial differential equations that serve as a self-sufficient constraints for the training procedure, and the boundary condition defined in $\mathcal{L}_{initial}$ as a pivot.
+
+Incredibly, this framework challenges the popular believe of the reliance of deep learning architectures to high volumes of data to give meaningful results. Instead, we can rely on Dirichlet or Newmann boundary conditions to fulfill the initial conditions.
+
+\subsection{Approximating functionals with PINNs}
+The most recent research, using PINNs, develop a way to not just learn functions, but to learn functional operators: Lagrangian, Hamiltonian, etc. \cite{cranmer2020lagrangianneuralnetworks, greydanus2019hamiltonianneuralnetworks} The first research creates a neural network that takes the general coordinates $q$ and $\dot q$ as input, to provide the lagrangian as an output, taking advantage of the auto-differentiation capabilities of modern machine learning frameworks to enforce the euler-lagrange equation with gradient-descent methods:
+
+\begin{equation}
+    \frac{d}{dt} \frac{\partial \mathcal{L}}{\partial \dot q} - \frac{\partial \mathcal{L}}{\partial q} = 0
+\end{equation}
+
+The current work extrapolates this concept to the field of density functions, embedding it into the training phase by ensuring the normalized nature of a density function, the second law of thermodynamics, and systems governed by kinetic theory following Liouville's theorem.
+
+This model establishes a cornerstone for solar wind modeling, bonding the kinetic model distribution to the results of the electromagnetic model, extending the training space from     L1 Lagrange to a whole grid interval from L1 to the Earth.
+
+\subsection{Physics informed Neural Operators}
+
+\subsubsection{Fourier Neural Operator}
 
 \section{Kinetic models and general constraints}
 In order to fully assume the magnetohydrodynamical model, interactions must converge to the Maxwell-Boltzmann thermodynamical distribution for certain conditions, implying a high colisionality degree, contrary to empirical observations of the Solar Wind. Therefore, the utilization of such a constrictive framework must be carefully evaluated before setting it up as a modeling constraints.
@@ -158,7 +188,6 @@ Another important property can be provided by conservation of energy in solar wi
     \frac{\partial}{\partial t} \left( \frac{1}{2} m_\alpha f_v^2 + m_\alpha q_\alpha f_E \cdot f_v\right) + \nabla \cdot \textbf{S} = 0
 \end{align*}
 
-
 \subsection{Complete dynamical system}
 For some general universal approximator $f_n$, also interpreted as dynamical descriptor in this context, there is a parameter space $\theta_n$ tied to the governing constraints ($g_i$) for its respective phenomena:
 
@@ -194,7 +223,7 @@ The current work utilizes data from L1-Lagrange readings; accordingly, the phase
     t &\in \left[0, 7200]s \\
 \end{align*}
 
-For the kinetic and electormagnetic model, we define the following Dirichlet boundary conditions:
+For the kinetic and electromagnetic model, we define the following Dirichlet boundary conditions:
 
 \begin{align*}
     f_\alpha\left(r, v_{max}, t) &= 0 \\
@@ -204,40 +233,6 @@ For the kinetic and electormagnetic model, we define the following Dirichlet bou
     f_B\left(r_0, t\right) &= B_{L1}(t) \\
 \end{align*}
 
-\section{Physics Informed Machine Learning}
-Usually, solely data-driven methods require huge volumes of high-quality data with black box algorithms that prevent interpretability, a key factor for physical modeling. The most recent research advocate for physical informed virtual loss function terms \cite{}, leading off to the vastly known field of Physics Informed Neural Networks.
-
-These models were created as numerical methods for solving Partial Differential Equations that embed physical modeling. It further extended to all fields that required PDE solving as a computationally efficient numerical alternative to other solvers.
-
-\subsection{Physics informed Neural Networks}
-
-\subsection{Physics informed Neural Operators}
-
-\subsubsection{Fourier Neural Operator}
-
-\subsection{Approximating the density function with PINNs}
-The most recent research, using PINNs, develop a way to not just learn functions, but to learn functional operators: Lagrangian, Hamiltonian, etc. \cite{cranmer2020lagrangianneuralnetworks, greydanus2019hamiltonianneuralnetworks} The first research creates a neural network that takes the general coordinates $q$ and $\dot q$ as input, to provide the lagrangian as an output, taking advantage of the auto-differentiation capabilities of modern machine learning frameworks to enforce the euler-lagrange equation with gradient-descent methods:
-
-\begin{equation}
-    \frac{d}{dt} \frac{\partial \mathcal{L}}{\partial \dot q} - \frac{\partial \mathcal{L}}{\partial q} = 0
-\end{equation}
-
-The current work extrapolates this concept to the field of density functions, embedding it into the training phase by ensuring the normalized nature of a density function, the second law of thermodynamics, and systems governed by kinetic theory following Liouville's theorem.
-
-This model establishes a cornerstone for solar wind modeling, bonding the kinetic model distribution to the results of the electromagnetic model, extending the training space from     L1 Lagrange to a whole grid interval from L1 to the Earth.
-
-\section{Data}
-
-\subsection{DSCOVR: Deep Space Climate Observatory}
-DSCOVR, a joint mission between NASA and the National Oceanic and Atmospheric Administration, is a crucial observational platform for monitoring space weather \cite{nasa_dscovr}. Launched in 2015, DSCOVR's primary mission is to monitor and provide advanced warning of potentially hazardous space weather events such as solar flares and coronal mass ejections that could impact Earth.
-
-It is equipped with two key instruments for measuring both energetic particle incidence and magnetic field parameters: the Faraday cup and the magnetometer from the PlasMag instrument \cite{nasa_dscovr}. The readings from these two sensors are crucial for virtually analyzing plasma dynamics near the L1 Lagrange point. These readings will be used as part of the core model data due to their real-time availability.
-
-\subsection{ACE: Advanced Composition Explorer}
-ACE, launched in 1997, provides continuous measurements of the solar wind and interstellar particles. It is equipped with several instruments designed to study the composition of solar and galactic particles, which are crucial for understanding the space weather environment. ACE's data helps in predicting geomagnetic storms and contributes to our understanding of the heliosphere.
-
-\subsection{WIND}
-The WIND spacecraft, launched in 1994, is part of the Global Geospace Science initiative. It provides comprehensive measurements of the solar wind, magnetic fields, and energetic particles. WIND's data is essential for understanding the fundamental processes of the solar wind and its interaction with the Earth's magnetosphere.
 
 \section{Results and discussion}
 
@@ -245,12 +240,8 @@ The WIND spacecraft, launched in 1994, is part of the Global Geospace Science in
 
 \subsection{Fourier Neural Operator 3D-Simulations}
 
-\section{Conclusion and future work}
+\section{Conclusion}
 This work demonstrated the effectiveness of Physics-Informed Neural Networks to model Solar Wind's behavior tied to diverse statistical mechanics formulations that lead to Vlasov's kinetic model. By embedding the governing physical equations directly into the loss function, we can efficiently train a neural network to approximate the solution of this complex, non-linear system.
-
-Future work will focus on improving the architecture design with Physics informed Neural Operators (PINOs) \cite{li2023physicsinformedneuraloperatorlearning} by embedding Maxwell's equations for data continuization through differentiable splines, the satellite data dependance inhibits the introduction os such powerful frameworks in this case.
-
-\section{Appendix}
 
 \bibliographystyle{plain}
 
