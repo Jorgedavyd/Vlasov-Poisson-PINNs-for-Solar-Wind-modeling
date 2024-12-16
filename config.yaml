@@ -39,17 +39,25 @@ neural_network:
 
 fno:
   f_e:
-    in_channels: 3
-    out_channels: 3
+    dimension: 2
+    nr_fno_layers: 4
+    fno_modes: 12
+    padding: 9
   f_p:
-    in_channels: 3
-    out_channels: 3
+    dimension: 2
+    nr_fno_layers: 4
+    fno_modes: 12
+    padding: 9
   f_E:
-    in_channels: 4
-    out_channels: 3
+    dimension: 2
+    nr_fno_layers: 4
+    fno_modes: 12
+    padding: 9
   f_B:
-    in_channels: 3
-    out_channels: 3
+    dimension: 2
+    nr_fno_layers: 4
+    fno_modes: 12
+    padding: 9
 
 training:
   rec_validation_freq: 1000
@@ -60,8 +68,4 @@ training:
 
 batch_size:
   pde: 1000
-  boundary1: 1000
-  boundary2: 1000
-
-graph:
-  func_arch: true
+  boundary: 1000

@@ -1,33 +1,20 @@
 ## define all related to the dataset
+from modulus.sym.domain.constraint.discrete import DictGridDataset
+from modulus.sym.hydra import ModulusConfig
 import numpy as np
 from numpy.typing import NDArray
-from typing import List
+from typing import List, Tuple
 import pandas as pd
 from torch import Tensor
 import torch
 from scipy.interpolate import CubicSpline
 from torch.utils.data import Dataset
 
-def get_data_grid(real_data: NDArray, real_time: NDArray, time_grid: NDArray) -> Tensor:
+
+def define_data(
+    real_data: NDArray, real_time: NDArray, cfg: ModulusConfig
+) -> Tuple[Tensor, Tensor]:
+    time_grid = np.arange(0, 1, cfg.geometry.grid_resolution)
     interpolator = CubicSpline(real_time, real_data)
     dataset = torch.from_numpy(interpolator(time_grid))
-    return dataset
-
-def get_time_grid(resolution: float) -> NDArray:
-    return np.arange(0, 1, resolution)
-
-class L1Dataset(Dataset):
-    def __init__(self, path: str, output_var: List[str]) -> None:
-        df: pd.DataFrame = pd.read_csv(path).loc[output_var, :]
-        df["t"] = np.array(list(map(lambda x: x.seconds, df.index - df.index[0])))
-        data: NDArray = df.values
-        real_data: NDArray = data
-        real_time: NDArray = data["t"]
-        self.keys = output_var
-        self.interpolator = CubicSpline(real_time, real_data)
-
-    def __getitem__(self, t):
-        values: NDArray = self.interpolator(t)
-        return {
-            key: values[idx] for idx, key in enumerate(self.keys)
-        }
+    return torch.from_numpy(time_grid), dataset
