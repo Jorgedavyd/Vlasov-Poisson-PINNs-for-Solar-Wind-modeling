@@ -75,6 +75,15 @@ def define_pde_constraints(
             faraday_z=0,
         ),
         batch_size=cfg.batch_size.pde,
+        bounds={
+            "x": cfg.bounds.r[0],
+            "y": cfg.bounds.r[1],
+            "z": cfg.bounds.r[2],
+            "V_x": cfg.bounds.v[0],
+            "V_y": cfg.bounds.v[1],
+            "V_z": cfg.bounds.v[2],
+            "t": cfg.bounds.t,
+        },
     )
     domain.add_constraint(pde_residual, "pde_residual")
     return domain
@@ -133,9 +142,9 @@ def velocity_boundary(
         batch_size=cfg.batch_size.boundary,
         outvar={"f_e": 0, "f_p": 0},
         parameterization={
-            V_x: Or(*cfg.bounds.V_x),
-            V_y: Or(*cfg.bounds.V_y),
-            V_z: Or(*cfg.bounds.V_z),
+            V_x: Or(*cfg.bounds.v[0]),
+            V_y: Or(*cfg.bounds.v[1]),
+            V_z: Or(*cfg.bounds.v[2]),
         },
     )
     domain.add_constraint(velocity_bc, "velocity_bc")
