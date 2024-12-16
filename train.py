@@ -1,5 +1,4 @@
 from modulus.sym.hydra import ModulusConfig
-from modulus.sym.hydra.utils import ModulusModels
 from modulus.sym.solver import Solver
 from modulus.sym.domain import Domain
 from sympy import Or
@@ -22,7 +21,7 @@ from equations import (
     define_ind,
     define_velocity_field,
 )
-from model import NeuralNetwork, FNO
+from model import NeuralNetwork, FNOModel
 
 from modulus.sym.geometry.primitives_3d import Geometry, Sphere
 from modulus.sym.utils.io.vtk import var_to_polyvtk
@@ -171,7 +170,7 @@ def train_nn(cfg: ModulusConfig) -> None:
 
 @modulus.sym.main(config_path="conf", config_name="config")
 def train_fno(cfg: ModulusConfig) -> None:
-    model = FNO(cfg)
+    model = FNOModel(cfg)
     nodes: List[Node] = define_nodes(model)
     geometry: Geometry = make_geometry(cfg)
     domain: Domain = Domain()
