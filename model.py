@@ -30,32 +30,32 @@ class NeuralNetwork(Arch):
 
         self.f_e = DeepNeuralNetwork(
             7,
-            cfg.neural_network.f_e.hidden_layers,
-            [getattr(nn, f) for f in cfg.neural_network.f_e.activations],
+            cfg.arch.neural_network.f_e.hidden_layers,
+            [getattr(nn, f) for f in cfg.arch.neural_network.f_e.activations],
         )
 
         self.f_p = DeepNeuralNetwork(
             7,
-            cfg.neural_network.f_p.hidden_layers,
-            [getattr(nn, f) for f in cfg.neural_network.f_p.activations],
+            cfg.arch.neural_network.f_p.hidden_layers,
+            [getattr(nn, f) for f in cfg.arch.neural_network.f_p.activations],
         )
 
         self.f_v = DeepNeuralNetwork(
             4,
-            cfg.neural_network.f_v.hidden_layers,
-            [getattr(nn, f) for f in cfg.neural_network.f_v.activations],
+            cfg.arch.neural_network.f_v.hidden_layers,
+            [getattr(nn, f) for f in cfg.arch.neural_network.f_v.activations],
         )
 
         self.f_E = DeepNeuralNetwork(
             4,
-            cfg.neural_network.f_E.hidden_layers,
-            [getattr(nn, f) for f in cfg.neural_network.f_E.activations],
+            cfg.arch.neural_network.f_E.hidden_layers,
+            [getattr(nn, f) for f in cfg.arch.neural_network.f_E.activations],
         )
 
         self.f_B = DeepNeuralNetwork(
-            cfg.dimensions + 1,
-            cfg.neural_network.f_B.hidden_layers,
-            [getattr(nn, f) for f in cfg.neural_network.f_B.activations],
+            4,
+            cfg.arch.neural_network.f_B.hidden_layers,
+            [getattr(nn, f) for f in cfg.arch.neural_network.f_B.activations],
         )
 
     def forward(self, dict_tensor: Dict[str, Tensor]):
@@ -117,7 +117,7 @@ class FNOModel(Arch):
                 Key("V_z"),
                 Key("t"),
             ],
-            **cfg.fno.f_e
+            **cfg.arch.fno.f_e
         )
 
         self.f_p = FNO(
@@ -130,14 +130,14 @@ class FNOModel(Arch):
                 Key("V_z"),
                 Key("t"),
             ],
-            **cfg.fno.f_p
+            **cfg.arch.fno.f_p
         )
 
-        self.f_v = FNO(input_keys=self.input_keys, **cfg.fno.f_v)
+        self.f_v = FNO(input_keys=self.input_keys, **cfg.arch.fno.f_v)
 
-        self.f_E = FNO(input_keys=self.input_keys, **cfg.fno.f_E)
+        self.f_E = FNO(input_keys=self.input_keys, **cfg.arch.fno.f_E)
 
-        self.f_B = FNO(input_keys=self.input_keys, **cfg.fno.f_B)
+        self.f_B = FNO(input_keys=self.input_keys, **cfg.arch.fno.f_B)
 
     def forward(self, input_var: Dict[str, Tensor]) -> Dict[str, Tensor]:
         E_output = self.f_E(input_var)

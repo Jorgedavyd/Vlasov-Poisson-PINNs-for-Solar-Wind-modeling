@@ -32,8 +32,8 @@ import pandas as pd
 
 
 def make_geometry(cfg: ModulusConfig):
-    nr_points: int = cfg.geometry.grid_resolution
-    ball = Sphere(center=(0, 0, 0), radius=cfg.geometry.max_length)
+    nr_points: int = cfg.custom.geometry.grid_resolution
+    ball = Sphere(center=(0, 0, 0), radius=cfg.custom.geometry.r[-1])
     s = ball.sample_boundary(nr_points=nr_points)
     var_to_polyvtk(s, "general_geometry")
     return s
@@ -80,20 +80,20 @@ def define_pde_constraints(
         ),
         batch_size=cfg.batch_size.pde,
         bounds={
-            "x": cfg.bounds.r[0],
-            "y": cfg.bounds.r[1],
-            "z": cfg.bounds.r[2],
-            "V_x": cfg.bounds.v[0],
-            "V_y": cfg.bounds.v[1],
-            "V_z": cfg.bounds.v[2],
-            "t": cfg.bounds.t,
+            "x": cfg.custom.bounds.r[0],
+            "y": cfg.custom.bounds.r[1],
+            "z": cfg.custom.bounds.r[2],
+            "V_x": cfg.custom.bounds.v[0],
+            "V_y": cfg.custom.bounds.v[1],
+            "V_z": cfg.custom.bounds.v[2],
+            "t": cfg.custom.bounds.t,
         },
     )
     domain.add_constraint(pde_residual, "pde_residual")
     return domain
 
 
-def get_interpolators(variables: List[str], path: str) -> Tuple[CubicSpline, ...]:
+def get_interpolators(variables: List[str], path: str) -> Tuple[CubicSpline]:
     interpolators: List[CubicSpline] = list()
     data: pd.DataFrame = pd.read_csv(path)
     time: NDArray = data.index.values.astype(np.float32)
@@ -115,7 +115,7 @@ def l1_boundary(nodes: List[Node], domain: Domain, cfg: ModulusConfig) -> Domain
         "V_y",
         "V_z",
     ]
-    time_grid: NDArray = np.arange(0, 1, cfg.geometry.grid_resolution)
+    time_grid: NDArray = np.arange(0, 1, cfg.custom.geometry.grid_resolution)
     (
         E_x_interpolator,
         E_y_interpolator,
@@ -135,15 +135,15 @@ def l1_boundary(nodes: List[Node], domain: Domain, cfg: ModulusConfig) -> Domain
             t=time_grid,
         ),
         outvar=dict(
-            E_x=E_x_interpolator.interpolate(time_grid),
-            E_y=E_y_interpolator.interpolate(time_grid),
-            E_z=E_z_interpolator.interpolate(time_grid),
-            B_x=B_x_interpolator.interpolate(time_grid),
-            B_y=B_y_interpolator.interpolate(time_grid),
-            B_z=B_z_interpolator.interpolate(time_grid),
-            V_x=V_x_interpolator.interpolate(time_grid),
-            V_y=V_y_interpolator.interpolate(time_grid),
-            V_z=V_z_interpolator.interpolate(time_grid),
+            E_x=E_x_interpolator(time_grid),
+            E_y=E_y_interpolator(time_grid),
+            E_z=E_z_interpolator(time_grid),
+            B_x=B_x_interpolator(time_grid),
+            B_y=B_y_interpolator(time_grid),
+            B_z=B_z_interpolator(time_grid),
+            V_x=V_x_interpolator(time_grid),
+            V_y=V_y_interpolator(time_grid),
+            V_z=V_z_interpolator(time_grid),
         ),
     )
     l1_parameters = SupervisedGridConstraint(
@@ -197,9 +197,9 @@ def velocity_boundary(
         batch_size=cfg.batch_size.boundary,
         outvar={"f_e": 0, "f_p": 0},
         parameterization={
-            V_x: Or(*cfg.bounds.v[0]),
-            V_y: Or(*cfg.bounds.v[1]),
-            V_z: Or(*cfg.bounds.v[2]),
+            V_x: Or(*cfg.custom.bounds.v[0]),
+            V_y: Or(*cfg.custom.bounds.v[1]),
+            V_z: Or(*cfg.custom.bounds.v[2]),
         },
     )
     domain.add_constraint(velocity_bc, "velocity_bc")

@@ -14,7 +14,7 @@ from torch.utils.data import Dataset
 def define_data(
     real_data: NDArray, real_time: NDArray, cfg: ModulusConfig
 ) -> Tuple[Tensor, Tensor]:
-    time_grid = np.arange(0, 1, cfg.geometry.grid_resolution)
+    time_grid = np.arange(0, 1, cfg.custom.geometry.grid_resolution)
     interpolator = CubicSpline(real_time, real_data)
     dataset = torch.from_numpy(interpolator(time_grid))
     return torch.from_numpy(time_grid), dataset
