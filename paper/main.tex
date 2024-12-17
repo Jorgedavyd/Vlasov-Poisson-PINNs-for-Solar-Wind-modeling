@@ -5,6 +5,8 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{cite}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
 
 \title{Vlasov-Maxwell-Liouville informed Operator Learning for Solar Wind Modeling}
 \author{Jorge D. Enciso}
@@ -103,7 +105,44 @@ This model establishes a cornerstone for solar wind modeling, bonding the kineti
 
 \subsection{Physics informed Neural Operators}
 
+Traditional Physics informed Machine Learning relies on the usage of some fixed input grid to learn a representation of the data utterly dependant on resolution. To solve this problem, a discretization-invariant operator should be embedded in the training process, and this is pragmatically solved with the operators/functionals (mappings between function spaces) learning.
+
+Such a general operator can be defined as a differential or integral operator. A useful way to embed operators, and take advantage of computational shortcuts at inference time, is using some kernel integral operator $\mathcal{G}$:
+
+\begin{align*}
+    \mathcal{G}[f(x); \kappa] = \int_\Omega \kappa(x, t) f(t) d(\alpha(t))
+\end{align*}
+
+for some region $\Omega$, defined kernel $k$, differentiable real valued functions $f$ and $\alpha$ such that the Riemann definition is fulfilled.
+
+One of such operators could be the convolution, since it is defined as follows:
+
+\begin{align*}
+    \mathcal{G}[ f(x); \kappa ] = (\kappa * f)(t) = \int_{-\infty}^\infty \kappa(\tau)f(t-\tau)\tau'
+\end{align*}
+
+The original paper presenting PINOs included 3 integral operators suitable for discretization-invariant operator learning, analogous to wavelet transforms, fourier transforms, and laplace transforms \cite{li2023physicsinformedneuraloperatorlearning}.
+
+This can be thought as a Functional analysis constraint model architecture, that pragmatically lands as a primordial Physics informed Machine Learning architecture that enables multi-resolution inference.
+
 \subsubsection{Fourier Neural Operator}
+
+To derive the definition of the Fourier Neural Operator, we must attend to the definition of the convolutional operator defined, and how it can be optimized under the convolution theorem.
+
+As it is vastly known, we can demonstrate that the following is true (Look at the appendix):
+
+\begin{align*}
+    \mathcal{G}[ f(x); \kappa ] = (\kappa * f)(t) = \int_{-\infty}^\infty \kappa(\tau)f(t-\tau)\tau' = \mathcal{F}^{-1}[\mathcal{F}[f] \cdot \mathcal{F}[\kappa]]
+\end{align*}
+
+So, we can define some frequency parameter space $\theta_\omega$, for some $R \in \theta_\omega$ such that $R = \mathcal{F}[\kappa]$, we get the following:
+
+\begin{align*}
+    \mathcal{G}[ f(x); R \in \theta_\omega] = \mathcal{F}^{-1}[\mathcal{F}[f] \cdot R]
+\end{align*}
+
+Here, we defined $\mathcal{G}$ as some operators with learnable parameters $R$ within the linear space $\theta_\omega$. This is the FNO, as it appropiately extrapolates some pre-defined operator to the frequency domain for computational ease.
+
 
 \section{Kinetic models and general constraints}
 In order to fully assume the magnetohydrodynamical model, interactions must converge to the Maxwell-Boltzmann thermodynamical distribution for certain conditions, implying a high colisionality degree, contrary to empirical observations of the Solar Wind. Therefore, the utilization of such a constrictive framework must be carefully evaluated before setting it up as a modeling constraints.
@@ -135,24 +174,6 @@ In this context, the system is typically dominated by electromagnetic interactio
 \end{equation}
 
 This form of Vlasov equation is widely used to capture the dynamics of collisionless plasmas, as it allows us to account for anisotropies in the solar wind, such as those arising from velocity space instabilities and non-thermal distributions of particle energies \cite{Verscharen_2016}. Unlike ideal MHD models, which assume that the Lorentz force term can be neglected, the Vlasov equation includes this term to account for deviations from isotropy and Maxwellian distributions in the solar wind, requiring numerical approximation techniques for practical solutions \cite{grandin2023hybridvlasovsimulationsoftxray}.
-
-Note that Vlasov's equation is tightly related to statistical mechanics through Liouville's theorem:
-
-\begin{equation}
-    \frac{\mathrm{df_\alpha(\mathbf{r}, \mathbf{v}, t)}}{\mathrm{dt}} = 0
-\end{equation}
-
-If we compute use the chain rule along the phase and time space, we end up with the following expression:
-\begin{equation}
-    \frac{\mathrm{df_\alpha(\mathbf{r}, \mathbf{v}, t)}}{\mathrm{dt}} = \frac{\partial f_\alpha}{\partial t} + \nabla_{\mathbf{r}} f_\alpha \frac{\partial \mathbf{r}}{\partial t} + \nabla_{\mathbf{v}} f_\alpha \frac{\partial \mathbf{v}}{\partial t} = 0
-\end{equation}
-
-which indeed is:
-
-\begin{equation}
-    \frac{\mathrm{df_\alpha(\mathbf{r}, \mathbf{v}, t)}}{\mathrm{dt}} = \frac{\partial f_\alpha}{\partial t} + \mathbf{v} \cdot \nabla_{\mathbf{r}} f_\alpha + \mathbf{a} \cdot \nabla_{\mathbf{v}} f_\alpha = 0
-\end{equation}
-
 
 \subsection{Entropy}
 
@@ -210,7 +231,7 @@ $f_\alpha$ is the kinetic description of each specie, $f_E$ is the electric fiel
 
 The cross-dependance between both models for the backpropagation process is crucial; thus, a backbone architecture for the electromagnetic descriptor engineered to exploit the backpropagation of the kinetic model can lead to faster convergence in addition to the Maxwell constraints.
 
-A cross-training process that relies on the bonds between the Maxwell and Vlasov PDE criterions will be critical; the PDE loss APORTE to the training process will be gradually incremented through epochs, and inversely correlated with the distances from the boundary contour delimiting the training space to minimize the error margin of non-representative results in the middle of the training process.
+A cross-training process that relies on the bonds between the Maxwell and Vlasov PDE criterions will be critical; the PDE loss contribution to the training process will be gradually incremented through epochs, and inversely correlated with the distances from the boundary contour delimiting the training space to minimize the error margin of non-representative results in the middle of the training process.
 
 This structure provides an optimization process overtly relying on PDE residuals; therefore, an appropiate set of boundary conditions is crucial for the convergence of the physics informed neural networks.
 
@@ -226,11 +247,18 @@ The current work utilizes data from L1-Lagrange readings; accordingly, the phase
 For the kinetic and electromagnetic model, we define the following Dirichlet boundary conditions:
 
 \begin{align*}
-    f_\alpha\left(r, v_{max}, t) &= 0 \\
-    f_\alpha\left(r, v_{min}, t) &= 0 \\
-    f_\alpha\left(r, v, t_0) &= 0 \\
+    f_p(r_0, v, t) = n_{L1}(t) \left( \frac{m_p}{2 \pi k_B T_{L1}(t)}\right)^{\frac{3}{2}}& \exp\left({-\frac{m_p | v_{L1}(t) - u_{L1}(t) |^2}{2k_BT_{L1}(t)}}  \right) \\
+    f_p\left(r, v_{min}, t) &= 0 \\
+    f_p\left(r, v, t_0) &= 0 \\
+    f_e(r_0, v, t) = n_{L1}(t) \left( \frac{m_e}{2 \pi k_B T_{L1, \perp}(t)}\right)&\left( \frac{m_e}{2 \pi k_B T_{L1, \parallel}(t)}\right)^{\frac{3}{2}} \exp\left(-\frac{m_ev_{L1, \perp}^2}{2k_BT_{L1, \perp}} - \frac{m_e (v_{L1, \parallel} - u_{L1, \parallel})^2}{2k_BT_{L1, \parallel}}\right) \\
+    f_e\left(r, v_{min}, t) &= 0 \\
+    f_e\left(r, v, t_0) &= 0 \\
     f_E\left(r_0, t\right) &= E_{L1}(t) \\
+    f_E\left(r, t_0\right) &= 0 \\
     f_B\left(r_0, t\right) &= B_{L1}(t) \\
+    f_B\left(r, t_0\right) &= 0 \\
+    f_v\left(r_0, t\right) &= V_{L1}(t) \\
+    f_v\left(r, t_0\right) &= 0 \\
 \end{align*}
 
 
@@ -242,6 +270,112 @@ For the kinetic and electromagnetic model, we define the following Dirichlet bou
 
 \section{Conclusion}
 This work demonstrated the effectiveness of Physics-Informed Neural Networks to model Solar Wind's behavior tied to diverse statistical mechanics formulations that lead to Vlasov's kinetic model. By embedding the governing physical equations directly into the loss function, we can efficiently train a neural network to approximate the solution of this complex, non-linear system.
+
+\section{Appendix}
+
+
+\begin{definition}[Riemann-Stieljes integral]
+    Given some partition $P = \{x_0, x_1, \ldots, x_n\}$ in $[a, b]$, we define $t_k \in [x_{k-1}, x_k]$ such that a partial sum of the form
+    \begin{align*}
+        S(P, f, \alpha) = \sum_{k = 1}^n f(t_k) \Delta \alpha_k
+    \end{align*}
+    is termed sum of Riemann-Stieljes of $f$ with respect to $\alpha$. $f$ is defined as Riemann-integrable with respect to $\alpha$ if $\exists N \in \mathbb{N}$ such that for every $\varepsilon > 0$ there is some $P_\varepsilon \subset [a, b]$ that encapsulates other partition $P$, and for every election of points $t_k \in [x_{k-1}, x_k]$, $\mid S(P, f, \alpha) - N \mid < \varepsilon$.
+\end{definition}
+
+\begin{definition}[Fourier Series]
+    The Fourier series of a function $f$, periodic under the interval $\Omega : [0, T]$, is given by the following series:
+    \begin{align*}
+        f(x) = \sum_{n = -\infty}^\infty c_n \exp \left( i 2\pi \frac{n}{T} x\right)
+    \end{align*}
+
+    where $c_n$ is some complex number defined within the symmetric consideration $\overline{c_k} = c_{-k}$ $ \forall k \in \mathbb{N}$ that is derived as follows:
+    \begin{align*}
+        f(x) &= \sum_{n = -\infty}^\infty c_n  e^{i 2\pi \frac{n}{T} x} \\
+        f(x) &= c_m e^{i 2\pi \frac{m}{T} x} + \sum_{n \neq m} c_n e^{i 2\pi \frac{n}{T} x} \\
+        c_m e^{i 2\pi \frac{m}{T} x} &= f(x) - \sum_{n \neq m} c_n e^{i 2\pi \frac{n}{T} x} \\
+        c_m &= e^{- i 2\pi \frac{m}{T} x} f(x) - e^{-i 2\pi \frac{m}{T} x} \sum_{n \neq m} c_n e^{i 2\pi \frac{n}{T} x} \\
+        \int_0^T c_m dx &= \int_0^Te^{- i 2\pi \frac{m}{T} x} f(x)dx  - \int_0^T \sum_{n \neq m} c_n e^{i 2\pi \frac{n - m}{T} x} dx\\
+        c_m &= \frac{1}{T} \int_0^Te^{- i 2\pi \frac{m}{T} x} f(x)dx
+    \end{align*}
+
+From this definition we can derive an interpretation of the Fourier Series as a reflection of an infinite orthogonal base with respect of the function.
+\end{definition}
+
+\begin{definition}[Fourier Transform]
+    Let $f$ be a non-periodic function. We can define the Fourier transform of $f$ as an extreme case of periodicity, interpreting it as tending to infinity:
+    \begin{align*}
+        \mathcal{F}[f] = \int_{-\infty}^{\infty} f(x) e^{- i 2 \pi s x} dx
+    \end{align*}
+\end{definition}
+
+\begin{theorem} [Convolution Theorem]
+    Given the following definition of some convolution under some domain $\Omega$ of some differentiable real valued functions $f$ and $g$:
+    \begin{align*}
+        h(x) = \int_{\Omega} f(t) g(x - t) dt
+    \end{align*}
+Given that $h \in L^1\left( \mathbb{R}^n\right)$ (the demonstration is out of scope), we can assert the following:
+\begin{align*}
+    \mathcal{F}[h] = \int_{\Omega} \left(\int_{\Omega} f(t) g(x - t) dt \right)e^{-i 2 \pi s x} dx
+\end{align*}
+Using the Fubini theorem to interchange the order of integration, we have:
+\begin{align*}
+    \mathcal{F}[h] = \int_{\Omega} \left(\int_{\Omega} f(t) g(x - t) e^{-i 2 \pi s x} dx\right) dt
+\end{align*}
+and finally, we make the following substitution $y = x - t$, with its respective jacobian being 1:
+\begin{align*}
+    \mathcal{F}[h] &= \int_{\Omega} \left(\int_{\Omega} f(t) g(y) e^{-i 2 \pi s (y + t)} dy\right) dt \\
+    \mathcal{F}[h] &= \left(\int_{\Omega} f(t) e^{-i 2 \pi s t} dt \right) \left(\int_{\Omega} g(y) e^{-i 2 \pi s y} dy \right) \\
+    \mathcal{F}[h] &= \mathcal{F}[f] \cdot \mathcal{F}[g]
+\end{align*}
+\end{theorem}
+
+\begin{definition}[Boltzmann's equation]
+    Given a probability density function $f(\mathbf{r}, \mathbf{v}, t)$ defining the probability of finding a particle in the phase space at the volume $d^3\mathbf{r}d^3\mathbf{v}$, Boltzmann's general statement is as follows:
+    \begin{align*}
+        \frac{\mathrm{df}}{\mathrm{dt}} = \left( \frac{\partial f}{\partial t} \right)_{force} + \left( \frac{\partial f}{\partial t} \right)_{coll}+ \left( \frac{\partial f}{\partial t} \right)_{diff}
+    \end{align*}
+    the $force$ term being the change due to external interference, $diff$ the diffusion of the particles, and $coll$ the forces due to collisions.
+
+    Now, given a fixed probability at time $t$ of some particles to be at $r$ and velocity $v$ in the volume $d^3\mathbf{r}d^3\mathbf{v}$, let's consider a shift due to a force $\mathbf{F}$ such that at time $t + \Delta t$, the particle is at $\mathbf{r} + \Delta \mathbf{r}= \mathbf{r} + \Delta t \mathbf{v}$ with velocity $\mathbf{v} + \Delta \mathbf{v} = \mathbf{v} + \frac{\mathbf{F}}{m} \Delta t$, and given Liouville's theorem, the phase space of probabilities doesn't change over time:
+    \begin{align*}
+        f\left(\mathbf{r} + \mathbf{v} \Delta t, \mathbf{v} + \frac{\mathbf{F}}{m} \Delta t, t + \Delta t\right) d^3\mathbf{r} d^3 \mathbf{v} = f(\mathbf{r}, \mathbf{v}, t) d^3\mathbf{r} d^3 \mathbf{v}
+    \end{align*}
+    But under collisions, we have to account for the change of the probability in the phase space due to the $\left( \frac{\partial f}{\partial t} \right)_{coll}$ term:
+    \begin{align*}
+        dN_{coll} &= \left( \frac{\partial f}{\partial t} \right)_{coll} \Delta t d^3\mathbf{r} d^3 \mathbf{v} \\
+        dN_{coll} &=  f\left(\mathbf{r} + \mathbf{v} \Delta t, \mathbf{v} + \frac{\mathbf{F}}{m} \Delta t, t + \Delta t\right) d^3\mathbf{r} d^3 \mathbf{v} - f(\mathbf{r}, \mathbf{v}, t) d^3\mathbf{r} d^3 \mathbf{v} = \Delta f d^3\mathbf{r} d^3\mathbf{v} \\
+        \frac{dN_{coll}}{d^3\mathbf{r}d^3\mathbf{v}} &= \frac{\Delta f}{\Delta t} \to^{\Delta f \to 0}_{\Delta t \to 0} \to \left(\frac{\partial f}{\partial t} \right)_{coll} = \frac{df}{dt}
+    \end{align*}
+
+Finally, if we expand upon the total differential of $f$ we get the following:
+\begin{align*}
+    df &= \frac{\partial f}{\partial t} dt + \frac{\partial f}{\partial x} dx + \frac{\partial f}{\partial y} dy + \frac{\partial f}{\partial z} dz + \frac{\partial f}{\partial v_x} dv_x + \frac{\partial f}{\partial v_y} dv_y + \frac{\partial f}{\partial v_z} dv_z \\
+    df &= \frac{\partial f}{\partial t} dt + \nabla f \cdot d\mathbf{r} + \nabla_{\mathbf{v}} f \cdot d\mathbf{v} \\
+    \frac{df}{dt} &= \frac{\partial f}{\partial t} + \nabla f \cdot \frac{d\mathbf{r}}{dt} + \nabla_{\mathbf{v}} f \cdot \frac{d\mathbf{v}}{dt} = \frac{\partial f}{\partial t} + \nabla f \cdot \mathbf{v}+ \nabla_{\mathbf{v}} f \cdot \frac{\mathbf{F}}{m}
+\end{align*}
+
+Getting our two conclusions with collisionless interaction of particles (Vlasov Equation) and collisions (Boltzmann Equation):
+\begin{align*}
+    \frac{\partial f}{\partial t} + \nabla f \cdot \mathbf{v}+ \nabla_{\mathbf{v}} f \cdot \frac{\mathbf{F}}{m} &= 0 \\
+    \frac{\partial f}{\partial t} + \nabla f \cdot \mathbf{v}+ \nabla_{\mathbf{v}} f \cdot \frac{\mathbf{F}}{m} &= \left( \frac{\partial f}{\partial t} \right)_{coll} \\
+.\end{align*}
+
+\end{definition}
+
+\begin{definition}[Lagrange multipliers]
+    Given a real valued function $f: \mathbb{R}^n \to \mathbb{R}$, let's say we want to find the local extrema of this function tied to some constraints $g_i: \mathbb{R}^n \to \mathbb{R}$. We define Lagrange Multipliers $\lambda_i$, real valued scalars, as follows:
+    \begin{align*}
+        \nabla f = \sum_{ i } \lambda_i \nabla g_i
+    \end{align*}
+    this definition comes from the colinearity of the gradient of constraints with respect to the function $f$. We can also create a function named \mathbf{Lagrangian function} to make the surrogate:
+    \begin{align*}
+        \mathcal{L} = f + \mathbf{\lambda} \cdot \mathbf{g}
+    \end{align*}
+    such that the following describes the extrema under defined constraints:
+    \begin{align*}
+        \nabla \mathcal{L} = 0
+    \end{align*}
+\end{definition}
 
 \bibliographystyle{plain}
 

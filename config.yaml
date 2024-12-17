@@ -5,7 +5,6 @@ defaults:
   - loss: sum
   - _self_
 
-
 custom:
   geometry:
     grid_resolution: 1000
