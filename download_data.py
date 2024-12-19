@@ -6,14 +6,10 @@ if __name__ == "__main__":
         try:
             DataDownloading(
                 [
-                    WIND.TDP_PM(root="/data/Vlasov/TDP_PM"),
-                    DSCOVR.FaradayCup(root="/data/Vlasov/DSCOVR/FaradayCup"),
-                    DSCOVR.Magnetometer(root="/data/Vlasov/DSCOVR/Magnetometer"),
-                    ACE.SWEPAM(download_path="/data/Vlasov/ACE/SWEPAM"),
-                    ACE.SWICS(download_path="/data/Vlasov/ACE/SWICS"),
-                    ACE.EPAM(download_path="/data/Vlasov/ACE/EPAM"),
-                    ACE.MAG(download_path="/data/Vlasov/ACE/MAG"),
-                    ACE.SIS(download_path="/data/Vlasov/ACE/SIS"),
+                    WIND.SWE_electron_moments(root="/data/Vlasov/Electron"),
+                    WIND.MAG(root="/data/Vlasov/Electron"),
+                    WIND.TDP_PLSP(root="/data/Vlasov/Proton"),
+                    WIND.SWE_Ion_Anistropy(root="/data/Vlasov/Proton_anistropy"),
                 ],
                 tuple_date,
             )

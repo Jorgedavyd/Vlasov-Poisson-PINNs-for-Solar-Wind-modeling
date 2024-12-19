@@ -8,7 +8,7 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 
-\title{Vlasov-Maxwell-Liouville informed Operator Learning for Solar Wind Modeling}
+\title{Vlasov-Maxwell informed Operator Learning for Solar Wind Modeling}
 \author{Jorge D. Enciso}
 \date{\today}
 
@@ -17,7 +17,7 @@
 \maketitle
 
 \begin{abstract}
-    Solar wind modeling presents significant challenges due to its complex, quasi-neutral, and collisionless plasma dynamics. Traditional magnetohydrodynamic (MHD) models often fail to accurately capture the system's intricate behavior. This research proposes a novel approach using Statistical Mechanics Informed Neural Networks to develop a more nuanced kinetic description of solar wind phenomena. By integrating Vlasov-Maxwell equations with physics-informed neural network architectures, we develop a computational framework that overcomes limitations of existing analytical and numerical models. The proposed methodology leverages data from space observatories including DSCOVR, ACE, and WIND, establishing boundary conditions from the L1-Lagrange point to Earth's orbit. Our approach directly embeds physical constraints into the neural network's learning process, enabling a more interpretable and computationally efficient model. The research demonstrates how physics-informed machine learning can provide insights into the complex dynamics of solar wind, moving beyond traditional temperature distributions and computational constraints.By combining statistical mechanics, kinetic theory, and advanced machine learning techniques, this work offers a promising new paradigm for understanding and predicting solar wind behavior, with potential implications for space weather prediction and fundamental plasma physics research.
+    Solar wind modeling presents significant challenges due to its complex, quasi-neutral, and collisionless plasma dynamics. Traditional magnetohydrodynamic (MHD) models often fail to accurately capture the system's intricate behavior. This research proposes a novel approach using Physics Informed Mahchine Learning to develop a more nuanced kinetic description of solar wind phenomena. By integrating Vlasov-Maxwell equations with physics-informed architectures, we develop a computational framework that overcomes limitations of existing analytical and numerical models. The proposed methodology leverages data from space observatories including DSCOVR, ACE, and WIND, establishing boundary conditions from the L1-Lagrange point to Earth's orbit. Our approach directly embeds physical constraints into the neural network's learning process, enabling a more interpretable and computationally efficient model. The research demonstrates how physics-informed machine learning can provide insights into the complex dynamics of solar wind, moving beyond traditional temperature distributions and computational constraints.By combining kinetic theory and advanced machine learning techniques, this work offers a promising new paradigm for understanding and predicting solar wind behavior, with potential implications for space weather prediction and fundamental plasma physics research.
 \end{abstract}
 
 \tableofcontents
@@ -33,33 +33,21 @@ The solar wind presents unique challenges due to its deviation from classical as
 
 On the other hand, using numerical approximators to model plasma dynamics ends up being computationally expensive. Take the Ideal MHD as an example:
 
-\begin{equation}
-    \nabla \cdot \textbf{E} = \frac{\sigma}{\epsilon_0}
-\end{equation}
-\begin{equation}
-    \nabla \cdot \textbf{B} = 0
-\end{equation}
-\begin{equation}
-    \frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \textbf{v}) = 0
-\end{equation}
-\begin{equation}
-    \frac{d}{dt} \left( \frac{p}{\rho^\gamma} \right)= 0
-\end{equation}
-\begin{equation}
-    \textbf{E} + \textbf{v} \times \textbf{B} = 0
-\end{equation}
-\begin{equation}
-    \frac{\partial \textbf{B}}{\partial t} = \nabla \times (\textbf{v} \times \textbf{B})
-\end{equation}
-\begin{equation}
-    \textbf{J} \times \textbf{B} = \frac{(\textbf{B}\cdot \nabla) \textbf{B}}{\mu_0} - \nabla \left(\frac{B^2}{2\mu_0}\right)
-\end{equation}
+\begin{align*}
+    \nabla \cdot \textbf{E} &= \frac{\sigma}{\epsilon_0} \\
+    \nabla \cdot \textbf{B} &= 0 \\
+    \frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \textbf{v}) &= 0 \\
+    \frac{d}{dt} \left( \frac{p}{\rho^\gamma} \right) &= 0 \\
+    \textbf{E} + \textbf{v} \times \textbf{B} &= 0 \\
+    \frac{\partial \textbf{B}}{\partial t} &= \nabla \times (\textbf{v} \times \textbf{B}) \\
+    \textbf{J} \times \textbf{B} &= \frac{(\textbf{B}\cdot \nabla) \textbf{B}}{\mu_0} - \nabla \left(\frac{B^2}{2\mu_0}\right) \\
+\end{align*}
 
 where $\mathbf{E}$ is the electric field, $\sigma$ the charge density, $\mathbf{B}$ the magnetic field, $p$ the pressure, $\rho$ the mass density, $v$ the general velocity, and $\gamma $ the adiabatic index.
 
 Nevertheless, recent research on machine learning computational methods enable novel approaches towards PDE solving and operator learning. These architectures, named Physics Informed Neural Networks, allow learnable solutions for less computational price thanks to modern hardware optimizations and shallower representations with universal approximators (in this case, neural networks). Hence, the scope of this research is to adhere these concepts on a deeper basis, proposing a new methodology within numerical statistical mechanics for solar wind modeling.
 
-To this date, the literature doesn't embark on statistical mechanics informed neural networks for probability density function learning on a solar wind scheme. Therefore, the objective of this work is to leverage statistical mechanics theory and physics informed neural networks to propose a new numerical approximation for the kinetic behavior of the solar wind.
+To this date, the literature doesn't embark on physics informed neural networks for probability density function learning on a solar wind scheme. Therefore, the objective of this work is to leverage kinetic theory and physics informed neural networks to propose a new numerical approximation for the kinetic behavior of the solar wind.
 
 \section{Related Work}
 
@@ -196,17 +184,10 @@ For this case particularly, the collisionless nature of the plasma and Liouville
 To complete the description of the solar wind, the Maxwell's electrodynamic formulation provides our final description to well-round the kinetic analysis of the plasma:
 
 \begin{align*}
-    \nabla \cdot E &= \frac{\sum_{\alpha} \rho_\alpha}{\epsilon_0} \\
+    \nabla \cdot E &= \frac{\sigma}{\epsilon_0} \\
     \nabla \cdot B &= 0 \\
     \nabla \times E &= - \frac{\partial B}{\partial t} \\
     \nabla \times B &= \mu_0 \left(J + \epsilon_0 \frac{\partial E}{\partial t}\right)
-\end{align*}
-
-\subsection{Conservation of energy}
-Another important property can be provided by conservation of energy in solar wind. In this case, we want to account for the bulk motion of the particles; the interaction energy, this is the work of the fields; and the conservation of the pointing vector $S$ describing the energy transport throughout space and time.
-
-\begin{align*}
-    \frac{\partial}{\partial t} \left( \frac{1}{2} m_\alpha f_v^2 + m_\alpha q_\alpha f_E \cdot f_v\right) + \nabla \cdot \textbf{S} = 0
 \end{align*}
 
 \subsection{Complete dynamical system}
@@ -219,15 +200,21 @@ For some general universal approximator $f_n$, also interpreted as dynamical des
 For this sake, we employ a Statistical mechanics informed Vlasov-Maxwell model that fully describes the known, ideal behavior of the solar wind:
 
 \begin{align*}
-    \frac{\partial f_\alpha}{\partial t} + f_v \cdot \nabla_{\mathbf{r}} f_\alpha &+ \frac{q_\alpha ( f_E + f_v \times f_B)}{m_\alpha} \cdot \nabla_{\mathbf{v}} f_\alpha = 0 \text{ (Vlasov)}\\
-\frac{d}{dt} \int &f_\alpha \log f_\alpha d^3r d^3(f_v) = 0 \text{ (Liouville)}\\
-\nabla \cdot f_E &= 0 \text{ (Quasineutrality)}\\
+    \frac{\partial f_\alpha}{\partial t} + \mathbf{v}_\alpha \cdot \nabla_{\mathbf{r}} f_\alpha &+ \frac{q_\alpha ( f_E + \mathbf{v}_\alpha \times f_B)}{m_\alpha} \cdot \nabla_{\mathbf{v}_\alpha} f_\alpha = 0 \text{ (Vlasov)}\\
+    \frac{\partial \rho_\alpha}{\partial t} + \nabla \cdot \left(\rho_\alpha \mathbf{v}_\alpha \right) &= 0 \text{ (Continuity)}\\
+    \frac{d}{dt} \int_\Omega &f_\alpha \log f_\alpha d^3\mathbf{r} d^3\mathbf{v} = 0 \text{ (Liouville)}\\
+\nabla \cdot f_E &= \frac{\sigma_{tot}}{\epsilon_0} \approx 0 \text{ (Quasineutality)}\\
 \nabla \cdot f_B &= 0 \\
 \nabla \times f_E &= - \frac{\partial f_B}{\partial t} \\
-\frac{\partial}{\partial t} \left( \frac{1}{2} m_\alpha f_v^2 + m_\alpha q_\alpha f_E \cdot f_v \right) &+ \nabla \cdot \textbf{S} = 0 \text{ (Conservation)} \\
+\nabla \times f_B &= \mu_0 \left(\mathbf{J}_{tot} + \epsilon_0 \frac{\partial f_E}{\partial t}\right) \\
+\rho_\alpha &= \int_{\Omega_\mathbf{v}} f_\alpha d^3 \mathbf{v}_\alpha \\
+\mathbf{v}_\alpha &= \frac{1}{\rho_\alpha} \int_{\Omega_\mathbf{v}} \mathbf{v} f_\alpha d^3 \mathbf{v} \\
+\mathbf{J}_\alpha &= q_\alpha \int_{\Omega_\mathbf{v}} \mathbf{v} f_\alpha d^3\mathbf{v} = q_\alpha \mathbf{v}_\alpha \rho_\alpha\\
+\mathbf{J}_{tot} &= \sum_\alpha \mathbf{J}_\alpha
 \end{align*}
 
-$f_\alpha$ is the kinetic description of each specie, $f_E$ is the electric field descriptor, $f_B$ is the magnetic field descriptor, $f_v$ is the velocity descriptor, $J$ is the current density (derived from $f_\alpha$), and $\rho_\alpha$ is the charge density (derived from $f_\alpha$).
+$f_\alpha$ is the kinetic description of each specie, $f_E$ is the electric field descriptor, $f_B$ is the magnetic field descriptor, $f_{v, \alpha}$ is the velocity descriptor for each specie, $J$ is the current density (derived from $f_{\rho, \alpha}$), and $\rho_\alpha$ is the charge density (derived from $f_\alpha$).
+
 
 The cross-dependance between both models for the backpropagation process is crucial; thus, a backbone architecture for the electromagnetic descriptor engineered to exploit the backpropagation of the kinetic model can lead to faster convergence in addition to the Maxwell constraints.
 
@@ -244,22 +231,36 @@ The current work utilizes data from L1-Lagrange readings; accordingly, the phase
     t &\in \left[0, 7200]s \\
 \end{align*}
 
-For the kinetic and electromagnetic model, we define the following Dirichlet boundary conditions:
+For the kinetic and electromagnetic model, we define the following Dirichlet and high order Neumann boundary conditions:
 
 \begin{align*}
-    f_p(r_0, v, t) = n_{L1}(t) \left( \frac{m_p}{2 \pi k_B T_{L1}(t)}\right)^{\frac{3}{2}}& \exp\left({-\frac{m_p | v_{L1}(t) - u_{L1}(t) |^2}{2k_BT_{L1}(t)}}  \right) \\
+    f_p(r_0, v, t) = \rho_{p, L1}(t) &\left( \frac{m_p}{2 \pi k_B T_{p, L1}(t)}\right)^{\frac{3}{2}} \exp\left({-\frac{m_p v_{p, L1}^2}{2k_BT_{p, L1}(t)}}  \right) \\
     f_p\left(r, v_{min}, t) &= 0 \\
     f_p\left(r, v, t_0) &= 0 \\
-    f_e(r_0, v, t) = n_{L1}(t) \left( \frac{m_e}{2 \pi k_B T_{L1, \perp}(t)}\right)&\left( \frac{m_e}{2 \pi k_B T_{L1, \parallel}(t)}\right)^{\frac{3}{2}} \exp\left(-\frac{m_ev_{L1, \perp}^2}{2k_BT_{L1, \perp}} - \frac{m_e (v_{L1, \parallel} - u_{L1, \parallel})^2}{2k_BT_{L1, \parallel}}\right) \\
+        f_e(r_0, v, t) = \frac{\rho_{e, L1}(t)}{\left( 2 \pi \right)^{\frac{3}{2}} T_{e, L1, \parallel}^{\frac{1}{2}}(t)T_{e, L1, \perp}^{\frac{1}{2}}(t)} &\exp \left( - \frac{v_{e, L1, \parallel}^2}{2T_{e, L1, \parallel}} \right) \exp \left( - \frac{v_{e, L1, \perp}^2}{2T_{e, L1, \perp}} \right) \\
     f_e\left(r, v_{min}, t) &= 0 \\
     f_e\left(r, v, t_0) &= 0 \\
-    f_E\left(r_0, t\right) &= E_{L1}(t) \\
+    \nabla \cdot f_E\left(r_0, t\right) &= \frac{\rho_{L1}}{\epsilon_0}\\
     f_E\left(r, t_0\right) &= 0 \\
     f_B\left(r_0, t\right) &= B_{L1}(t) \\
     f_B\left(r, t_0\right) &= 0 \\
-    f_v\left(r_0, t\right) &= V_{L1}(t) \\
-    f_v\left(r, t_0\right) &= 0 \\
+    \mathbf{v}_\alpha \left(r_0, t\right) &= V_{\alpha, L1}(t) \\
 \end{align*}
+
+We use the Maxwellian and bi-Maxwellian distribution as initial conditions for $f_p$ and $f_e$ respectively, the iterative process should blend all the dynamical system components to evolve these distributions to different representations.
+
+\section{Data and preprocessing}
+This work utilizes the L1-Lagrange readings of the WIND spacecraft. Specifically, the Solar Wind Experiment (SWE) electron moments and multi-directional proton fluxes. Moreover, the 3DP PESA Low for Ion moments and the computation of the bi-Maxwellian and Maxwellian distribution at L1.
+
+To derive the parallel and perpendicular temperature of the solar wind protons with respect of the direction of the magnetic field, the following relation has been used:
+\begin{align*}
+    v_\perp &= \sqrt{\frac{2k_BT_\perp}{m_p}} \to T_\perp = \frac{v_\perp^2 m_p}{2k_B}\\
+    v_\parallel &= \sqrt{\frac{2k_BT_\parallel}{m_p}} \to T_\parallel = \frac{v_\parallel^2 m_p}{2k_B}\\
+\end{align*}
+
+$v_\perp$ and $v_\parallel$ being the thermal speeds of the protons perpendicular and parallel to the magnetic field direction respectively.
+
+The electric field components are derived from the Faraday's Cup readings as follows:
 
 
 \section{Results and discussion}

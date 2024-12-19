@@ -8,7 +8,8 @@ from sympy import Or
 from argparse import ArgumentParser
 from typing import List, Callable, Tuple
 import modulus.sym
-from modulus.sym import Node
+from modulus.sym import Node, Key
+from modulus.sym.models.fno.fno import FNO
 from modulus.sym.domain.constraint import (
     PointwiseBoundaryConstraint,
     PointwiseInteriorConstraint,
@@ -24,7 +25,7 @@ from equations import (
     define_ind,
     define_velocity_field,
 )
-from model import NeuralNetwork, FNOModel
+from model import NeuralNetwork
 import numpy as np
 from modulus.sym.geometry.primitives_3d import Geometry, Sphere
 from modulus.sym.utils.io.vtk import var_to_polyvtk
@@ -39,22 +40,29 @@ def make_geometry(cfg: ModulusConfig):
     return s
 
 
-def define_nodes(model) -> List[Node]:
+def define_pde(*args) -> List[Node]:
+    nodes = []
+    for arg in args:
+        nodes.append(arg.make_nodes())
+
     maxwell = Maxwell()
-    liouville_proton = LiouvilleProton()
-    liouville_electron = LiouvilleElectron()
-    vlasov_proton = VlasovProton()
-    vlasov_electron = VlasovElectron()
-    energy_conservation = EnergyConservation()
+
+    liouville_proton = Liouville()
+    vlasov_proton = Vlasov()
+    continuity_proton = Continuity()
+
+    liouville_electron = Liouville()
+    vlasov_electron = Vlasov()
+    continuity_electron = Continuity()
 
     nodes = (
         maxwell.nodes()
         + liouville_electron.nodes()
         + liouville_proton.nodes()
+        + continuity_proton.nodes()
         + vlasov_electron.nodes()
         + vlasov_proton.nodes()
-        + energy_conservation.nodes()
-        + [model.make_nodes()]
+        + continuity_electron.nodes()
     )
 
     return nodes
@@ -221,9 +229,9 @@ def define_boundary_conditions(
 
 
 @modulus.sym.main(config_path="conf", config_name="config")
-def train_nn(cfg: ModulusConfig) -> None:
-    model = NeuralNetwork(cfg)
-    nodes: List[Node] = define_nodes(model)
+def run(cfg: ModulusConfig) -> None:
+    f_p, f_e, f_E, f_B = ...
+    nodes: List[Node] = define_pde(f_p, f_e, f_E, f_B)
     geometry: Geometry = make_geometry(cfg)
     domain: Domain = Domain()
     domain: Domain = define_pde_constraints(nodes, geometry, domain, cfg)
@@ -234,8 +242,9 @@ def train_nn(cfg: ModulusConfig) -> None:
 
 @modulus.sym.main(config_path="conf", config_name="config")
 def train_fno(cfg: ModulusConfig) -> None:
+    f_p = FNOModel(cfg.arch.f_p.fno)
     model = FNOModel(cfg)
-    nodes: List[Node] = define_nodes(model)
+    nodes: List[Node] = define_pde(model)
     geometry: Geometry = make_geometry(cfg)
     domain: Domain = Domain()
     domain: Domain = define_pde_constraints(nodes, geometry, domain, cfg)
