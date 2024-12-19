@@ -3,10 +3,8 @@ from modulus.sym.hydra import ModulusConfig
 from modulus.sym.solver import Solver
 from modulus.sym.domain import Domain
 from numpy._typing import NDArray
-from scipy.interpolate import CubicSpline
-from sympy import Or
-from argparse import ArgumentParser
-from typing import List, Callable, Tuple
+from sympy import Or, Symbol
+from typing import List, Callable
 import modulus.sym
 from modulus.sym import Node, Key
 from modulus.sym.models.fno.fno import FNO
@@ -16,16 +14,14 @@ from modulus.sym.domain.constraint import (
     SupervisedGridConstraint,
 )
 from equations import (
-    EnergyConservation,
-    LiouvilleProton,
-    LiouvilleElectron,
+    Vlasov,
+    Continuity,
     Maxwell,
-    VlasovProton,
-    VlasovElectron,
+    Velocity,
+    Density,
     define_ind,
-    define_velocity_field,
+    define_velocity
 )
-from model import NeuralNetwork
 import numpy as np
 from modulus.sym.geometry.primitives_3d import Geometry, Sphere
 from modulus.sym.utils.io.vtk import var_to_polyvtk
@@ -40,30 +36,29 @@ def make_geometry(cfg: ModulusConfig):
     return s
 
 
-def define_pde(*args) -> List[Node]:
-    nodes = []
-    for arg in args:
-        nodes.append(arg.make_nodes())
-
+def define_nodes(*args) -> List[Node]:
     maxwell = Maxwell()
-
-    liouville_proton = Liouville()
-    vlasov_proton = Vlasov()
-    continuity_proton = Continuity()
-
-    liouville_electron = Liouville()
-    vlasov_electron = Vlasov()
-    continuity_electron = Continuity()
+    vlasov_proton = Vlasov("p")
+    continuity_proton = Continuity("p")
+    vlasov_electron = Vlasov("e")
+    continuity_electron = Continuity("e")
 
     nodes = (
-        maxwell.nodes()
-        + liouville_electron.nodes()
-        + liouville_proton.nodes()
+        [
+            Node(["f_e", "t"], ["rho_e"], Density("e", geometry, nr_points, montecarlo_points)), ## mirar esto
+            Node(["f_p", "t"], ["rho_p"], Density("p", geometry, nr_points, montecarlo_points)),
+            Node(["f_e", "t"], ["v_xe", "v_ye", "v_ze"], Velocity("e", geometry, nr_points, montecarlo_points)),
+            Node(["f_p", "t"], ["v_xp", "v_yp", "v_zp"], Velocity("p", geometry, nr_points, montecarlo_points)),
+         ]
+        + maxwell.nodes()
         + continuity_proton.nodes()
         + vlasov_electron.nodes()
         + vlasov_proton.nodes()
         + continuity_electron.nodes()
     )
+
+    for arg in args:
+        nodes.append(arg.make_nodes())
 
     return nodes
 
@@ -75,121 +70,73 @@ def define_pde_constraints(
         nodes=nodes,
         geometry=geometry,
         outvar=dict(
-            liouville_proton=0,
-            liouville_electron=0,
             vlasov_proton=0,
             vlasov_electron=0,
-            energy_conservation=0,
+            continuity_proton=0,
+            continuity_electron=0,
             gauss_elec=0,
             gauss_mag=0,
             faraday_x=0,
             faraday_y=0,
             faraday_z=0,
+            ampere_x=0,
+            ampere_y=0,
+            ampere_z=0,
         ),
         batch_size=cfg.batch_size.pde,
         bounds={
             "x": cfg.custom.bounds.r[0],
             "y": cfg.custom.bounds.r[1],
             "z": cfg.custom.bounds.r[2],
-            "V_x": cfg.custom.bounds.v[0],
-            "V_y": cfg.custom.bounds.v[1],
-            "V_z": cfg.custom.bounds.v[2],
             "t": cfg.custom.bounds.t,
         },
     )
     domain.add_constraint(pde_residual, "pde_residual")
     return domain
 
-
-def get_interpolators(variables: List[str], path: str) -> Tuple[CubicSpline]:
-    interpolators: List[CubicSpline] = list()
-    data: pd.DataFrame = pd.read_csv(path)
-    time: NDArray = data.index.values.astype(np.float32)
-    for variable in variables:
-        interpolators.append(CubicSpline(time, data[variable].values))
-    return interpolators
-
-
 def l1_boundary(nodes: List[Node], domain: Domain, cfg: ModulusConfig) -> Domain:
     path: str = "/data/Vlasov/curated.csv"
     variables: List[str] = [
+        "time",
         "E_x",
         "E_y",
         "E_z",
         "B_x",
         "B_y",
         "B_z",
-        "V_x",
-        "V_y",
-        "V_z",
+        "rho_e",
+        "rho_p",
+        "v_xp",
+        "v_yp",
+        "v_zp",
+        "v_xe",
+        "v_ye",
+        "v_ze",
+        "f_p",
+        "f_e"
     ]
-    time_grid: NDArray = np.arange(0, 1, cfg.custom.geometry.grid_resolution)
-    (
-        E_x_interpolator,
-        E_y_interpolator,
-        E_z_interpolator,
-        B_x_interpolator,
-        B_y_interpolator,
-        B_z_interpolator,
-        V_x_interpolator,
-        V_y_interpolator,
-        V_z_interpolator,
-    ) = get_interpolators(variables, path)
+    df: pd.DataFrame = pd.read_csv(path)
+    time: NDArray = df.values
+
     train_dataset = DictGridDataset(
         invar=dict(
-            x=np.zeros_like(time_grid),
-            y=np.zeros_like(time_grid),
-            z=np.zeros_like(time_grid),
-            t=time_grid,
+            x=np.zeros_like(time),
+            y=np.zeros_like(time),
+            z=np.zeros_like(time),
+            t=time,
         ),
-        outvar=dict(
-            E_x=E_x_interpolator(time_grid),
-            E_y=E_y_interpolator(time_grid),
-            E_z=E_z_interpolator(time_grid),
-            B_x=B_x_interpolator(time_grid),
-            B_y=B_y_interpolator(time_grid),
-            B_z=B_z_interpolator(time_grid),
-            V_x=V_x_interpolator(time_grid),
-            V_y=V_y_interpolator(time_grid),
-            V_z=V_z_interpolator(time_grid),
-        ),
+        outvar= {
+            k: df[k].values for k in variables
+        }
     )
+
     l1_parameters = SupervisedGridConstraint(
         nodes=nodes,
         dataset=train_dataset,
         batch_size=cfg.batch_size.boundary,
     )
+
     domain.add_constraint(l1_parameters, "l1_bc")
-    return domain
-
-
-def electron_boundary(
-    nodes: List[Node], geometry: Geometry, domain: Domain, cfg: ModulusConfig
-) -> Domain:
-    x, y, z, t = define_ind()
-    boltzmann_initial_condition = PointwiseBoundaryConstraint(
-        nodes=nodes,
-        geometry=geometry,
-        outvar={},
-        batch_size=cfg.batch_size.boundary,
-        parameterization={x: 0, y: 0, z: 0, t: 0},
-    )
-    domain.add_constraint(boltzmann_initial_condition, "vlasov_electron_boundary")
-    return domain
-
-
-def proton_boundary(
-    nodes: List[Node], geometry: Geometry, domain: Domain, cfg: ModulusConfig
-) -> Domain:
-    x, y, z, t = define_ind()
-    boltzmann_initial_condition = PointwiseBoundaryConstraint(
-        nodes=nodes,
-        geometry=geometry,
-        outvar={},
-        batch_size=cfg.batch_size.boundary,
-        parameterization={x: 0, y: 0, z: 0, t: 0},
-    )
-    domain.add_constraint(boltzmann_initial_condition, "vlasov_proton_boundary")
     return domain
 
 
@@ -198,16 +145,20 @@ def velocity_boundary(
 ) -> Domain:
     x, y, z, t = define_ind()
     input = dict(x=x, y=y, z=z, t=t)
-    V_x, V_y, V_z = define_velocity_field(*input)
+    vxe, vye, vze = define_velocity(input, "e")
+    vxp, vyp, vzp = define_velocity(input, "p")
     velocity_bc = PointwiseBoundaryConstraint(
         nodes=nodes,
         geometry=geometry,
         batch_size=cfg.batch_size.boundary,
         outvar={"f_e": 0, "f_p": 0},
         parameterization={
-            V_x: Or(*cfg.custom.bounds.v[0]),
-            V_y: Or(*cfg.custom.bounds.v[1]),
-            V_z: Or(*cfg.custom.bounds.v[2]),
+            vxe: Or(*cfg.custom.bounds.v[0]),
+            vye: Or(*cfg.custom.bounds.v[1]),
+            vze: Or(*cfg.custom.bounds.v[2]),
+            vxp: Or(*cfg.custom.bounds.v[0]),
+            vyp: Or(*cfg.custom.bounds.v[1]),
+            vzp: Or(*cfg.custom.bounds.v[2]),
         },
     )
     domain.add_constraint(velocity_bc, "velocity_bc")
@@ -218,49 +169,69 @@ def define_boundary_conditions(
     nodes: List[Node], geometry: Geometry, domain: Domain, cfg: ModulusConfig
 ) -> Domain:
     boundary_conditions: List[Callable] = [
-        electron_boundary,
-        proton_boundary,
         velocity_boundary,
         l1_boundary,
     ]
-    for func in boundary_conditions:
-        domain: Domain = func(nodes, geometry, domain, cfg)
+    for idx, func in enumerate(boundary_conditions):
+        domain.add_constraint(
+            func(nodes, geometry, domain, cfg),
+            str(idx),
+        )
+
     return domain
 
+def initial_conditions(
+    nodes: List[Node], geometry: Geometry, domain: Domain
+) -> Domain:
+    t = Symbol("t")
+    initial = PointwiseInteriorConstraint(
+        nodes =nodes,
+        geometry = geometry,
+        outvar = dict(
+            f_p = 0, f_e = 0,
+            E_x = 0, E_y = 0, E_z = 0,
+            B_x = 0, B_y = 0, B_z = 0,
+            v_xp = 0, v_yp = 0, v_zp = 0,
+            v_xe = 0, v_ye = 0, v_ze = 0,
+        ),
+        parameterization = {
+            t: 0
+        }
+    )
+    domain.add_constraint(initial, "initial_conditions")
+    return domain
 
 @modulus.sym.main(config_path="conf", config_name="config")
 def run(cfg: ModulusConfig) -> None:
-    f_p, f_e, f_E, f_B = ...
-    nodes: List[Node] = define_pde(f_p, f_e, f_E, f_B)
-    geometry: Geometry = make_geometry(cfg)
-    domain: Domain = Domain()
-    domain: Domain = define_pde_constraints(nodes, geometry, domain, cfg)
-    domain: Domain = define_boundary_conditions(nodes, geometry, domain, cfg)
-    slv = Solver(cfg, domain)
-    slv.solve()
+    f_p, f_e, E, B = FNO(
+        invar = [Key("x"), Key("y"), Key("z"), Key("v_xp"), Key("v_yp"), ("v_zp")],
+        outvar = [Key("f_p")],
+        **cfg.arch.f_p
+    ), FNO(
+        invar = [Key("x"), Key("y"), Key("z"), Key("v_xe"), Key("v_ye"), ("v_ze")],
+        outvar = [Key("f_e")],
+        **cfg.arch.f_e
+    ), FNO(
+        invar = [Key("x"), Key("y"), Key("z"), Key("t")],
+        outvar = [Key("E_x"), Key("E_y"), Key("E_z")],
+        **cfg.arch.E
+    ), FNO(
+        invar = [Key("x"), Key("y"), Key("z"), Key("t")],
+        outvar = [Key("B_x"), Key("B_y"), Key("B_z")],
+        **cfg.arch.B
+    )
 
-
-@modulus.sym.main(config_path="conf", config_name="config")
-def train_fno(cfg: ModulusConfig) -> None:
-    f_p = FNOModel(cfg.arch.f_p.fno)
-    model = FNOModel(cfg)
-    nodes: List[Node] = define_pde(model)
+    nodes: List[Node] = define_nodes(f_p, f_e, E, B)
     geometry: Geometry = make_geometry(cfg)
+
     domain: Domain = Domain()
-    domain: Domain = define_pde_constraints(nodes, geometry, domain, cfg)
+    domain: Domain = initial_conditions(nodes, geometry, domain)
     domain: Domain = define_boundary_conditions(nodes, geometry, domain, cfg)
+    domain: Domain = define_pde_constraints(nodes, geometry, domain, cfg)
+
     slv = Solver(cfg, domain)
     slv.solve()
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser(
-        prog="VlasovMaxwell-PINN",
-        description="Statistical mechanics informed Neural Network training for solar wind modeling",
-    )
-    parser.add_argument("-t", "--type", help="Define the architecture of the models")
-    args = parser.parse_args()
-    if args.type == "nn":
-        train_nn()
-    elif args.type == "fno":
-        train_fno()
+    run()

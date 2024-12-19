@@ -29,10 +29,6 @@ training:
   rec_monitor_freq: 1000
   rec_constraint_freq: 100
   max_steps: 10000
-  resolution:
-  weights:
-    pde_weight: 0.1
-    constraint_weight: 1.
 
 batch_size:
   pde: 1000
