@@ -30,8 +30,8 @@ import pandas as pd
 
 
 def make_geometry(cfg: ModulusConfig):
-    nr_points: int = cfg.custom.geometry.grid_resolution
-    ball = Sphere(center=(0, 0, 0), radius=cfg.custom.geometry.r[-1])
+    nr_points: int = cfg.custom.geometry.nr_points
+    ball = Sphere(center=(0, 0, 0), radius=cfg.custom.bounds.r[-1])
     s = ball.sample_boundary(nr_points=nr_points)
     var_to_polyvtk(s, "general_geometry")
     return s
