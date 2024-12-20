@@ -1,5 +1,15 @@
+custom:
+  geometry:
+    nr_points: 1000
+    montecarlo_points: 1000
+
+  bounds:
+    r:
+    v:
+    t:
+
 scheduler:
-  max_lr: 1e-2
+  decay: 0.95
 
 arch:
   f_e:
